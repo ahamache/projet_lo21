@@ -10,3 +10,14 @@
 	<string>
 	<iostream>
 
+1528059799 source:d:\utc\gi02\lo21\projet\projet_lo21\projet_lo21\main.cpp
+	<iostream>
+	"autocell.h"
+
+1528059820 d:\utc\gi02\lo21\projet\projet_lo21\projet_lo21\autocell.h
+	<string>
+	<iostream>
+
+1528059589 source:d:\utc\gi02\lo21\projet\projet_lo21\projet_lo21\autocell.cpp
+	"autocell.h"
+

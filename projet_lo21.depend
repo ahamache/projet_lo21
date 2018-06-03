@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1528024871 source:c:\users\ségolène\documents\utc\gi01\lo21\projet_lo21\main.cpp
+	<iostream>
+	"autocell.h"
+
+1528025178 source:c:\users\ségolène\documents\utc\gi01\lo21\projet_lo21\autocell.cpp
+	"autocell.h"
+
+1528025857 c:\users\ségolène\documents\utc\gi01\lo21\projet_lo21\autocell.h
+	<string>
+	<iostream>
+

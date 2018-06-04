@@ -252,16 +252,30 @@ Etat2D& Etat2D::operator=(const Etat2D& e){
     return *this;
 }
 
-unsigned int Etat2D::CountVoisin(unsigned int li, unsigned int co){
+unsigned int Etat2D::CountVoisin(unsigned int li, unsigned int co)const{
 
     unsigned int nb=0;
-    unsigned int x=nbLigne;
-    unsigned int y=nbColonne;
+    unsigned int limH, limB, limG, limD;
 
-    for(int i=-1;i<=1;i++){
-        for(int j=-1;j<=1;j++){
-            //if(e.getCellule( (li+i+x)%x, (co+j+y)%y))
-                if(valeurs[li+i+x][co+j+y])
+    if(li==0)
+        limH=li;
+    else limH=li-1;
+
+    if(li==nbLigne)
+        limB=li;
+    else limB=li+1;
+
+    if(co==0)
+        limG=co;
+    else limG=co-1;
+
+    if(co==nbColonne)
+        limD=co;
+    else limD=co+1;
+
+    for(int i=limH; i<=limB; i++){
+        for(int j=limG; j<=limD; j++){
+                if(valeurs[i][j])
                     nb+=1;
         }
     }
@@ -276,12 +290,12 @@ void Automate2D::AppliquerTransition(const Etat2D& dep, Etat2D& dest) const{
     if(dest.getRow()!=dep.getRow()||dest.getCol()!=dep.getCol())
         dest=dep;
 
-    for(unsigned int i=0; i<dep.getRow(); i++){
-        for(unsigned int j=0; j<dep.getCol(); j++){
+    for(unsigned int i=0; i<dep.getRow(); ++i){
+        for(unsigned int j=0; j<dep.getCol(); ++j){
 
-//            unsigned int nbVoisin=dep.CountVoisin(i,j);
+            unsigned int nbVoisin=dep.CountVoisin(i,j);
 
-  /*          if (dep.getCellule(i,j)){ //cellule vivante
+            if (dep.getCellule(i,j)){ //cellule vivante
                 if(nbVoisin<nbMinVivant || nbVoisin>nbMaxVivant)
                     dest.setCellule(i,j,false); //si trop ou pas assez de voisin alors la cellule meurt
             }
@@ -293,8 +307,8 @@ void Automate2D::AppliquerTransition(const Etat2D& dep, Etat2D& dest) const{
             }
             }
         }
+}
 
-    //}
 
 void Simulateur2D::setEtatDepart(const Etat2D& e){
 

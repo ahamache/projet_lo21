@@ -5,7 +5,7 @@ using namespace std;
 
 int main()
 {
-    /*Automate2D a(2,3,2,4);
+    Automate2D a(2,3,2,4);
 
     cout << "Creation d'etats" << endl;
     Etat2D e2(7,4);
@@ -13,7 +13,7 @@ int main()
     e2.setCellule(3,1,true);
     e2.setCellule(6,3,true);
     e2.setCellule(1,0,true);
-    e2setCellule(6,0,true);
+    e2.setCellule(6,0,true);
 
     Simulateur2D s(a,e2);
     cout<<e2;
@@ -22,9 +22,9 @@ int main()
         s.next();
         cout<<s.dernier()<<"\n";
 
-    }*/
+    }
 
-    cout << "Creation d'etats" << endl;
+    /*cout << "Creation d'etats" << endl;
     Etat1D e1(15);
     e1.setCellule(4,true);
     e1.setCellule(3,true);
@@ -45,7 +45,7 @@ int main()
         s.next();
         cout<<s.dernier()<<"\n";
 
-    }
+    }*/
 
 
     return 0;

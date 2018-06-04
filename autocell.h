@@ -88,7 +88,7 @@ public:
     void afficherGrille() const;
     Etat2D(const Etat2D& e);
     Etat2D& operator=(const Etat2D& e);
-    unsigned int CountVoisin(unsigned int li, unsigned int co);
+    unsigned int CountVoisin(unsigned int li, unsigned int co) const;
 };
 
 std::ostream& operator<<(std::ostream& f, const Etat2D& e);

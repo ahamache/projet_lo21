@@ -306,7 +306,6 @@ void Automate2D::AppliquerTransition(const Etat2D& dep, Etat2D& dest) const{
                 if(nbVoisin>=nbMinMort && nbVoisin<=nbMaxMort)
                     dest.setCellule(i,j,true); //si suffisament de cellule alors la cellule nait*/
             }
-            cout<<"\n";
             }
         }
 }
@@ -344,7 +343,6 @@ void Simulateur2D::next(){
     if(etats[rang%nbMaxEtats]==nullptr){
         etats[rang%nbMaxEtats]=new Etat2D;}
 
-    cout<<"on rentre dans app transition";
     automate.AppliquerTransition(*etats[(rang-1)%nbMaxEtats],*etats[rang%nbMaxEtats]);
 
 }

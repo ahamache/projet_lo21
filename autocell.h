@@ -73,13 +73,13 @@ public:
 
 class Etat2D{ //grille de l'application
 
-    unsigned int nbLigne=0;
-    unsigned int nbColonne=0;
-    bool** valeurs;
+    unsigned int nbLigne;
+    unsigned int nbColonne; //attributs valeurs et nbColonne dans la classe mère
+    bool** valeurs; //tableau d'int plutôt
 
 public:
-
-    Etat2D(unsigned int nbL=0, unsigned int nbC=0);
+    Etat2D() : nbLigne(0), nbColonne(0), valeurs(nullptr) {}
+    Etat2D(unsigned int nbL, unsigned int nbC);
     const unsigned int getCol()const {return nbColonne;}
     const unsigned int getRow()const {return nbLigne;}
     bool getCellule(unsigned int i, unsigned int j) const;
@@ -118,7 +118,7 @@ class Simulateur2D{
     const Automate2D& automate;
     const Etat2D* depart=nullptr;
     Etat2D** etats=nullptr;
-    unsigned int nbMaxEtats=0; //nb max qu'on sauvegarde dans le tableau etats
+    unsigned int nbMaxEtats; //nb max qu'on sauvegarde dans le tableau etats
     unsigned int rang=0;
 
 public :

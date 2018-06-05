@@ -16,12 +16,16 @@ int main()
     e2.setCellule(6,0,true);
 
     Simulateur2D s(a,e2);
-    cout<<e2;
-    for(unsigned int i=0;i<10;i++){
+    cout<<"rang="<<s.getRangDernier()<<endl;
 
-        s.next();
-        cout<<s.dernier()<<"\n";
+    try {
+        for(unsigned int i=0;i<10;i++){
+            cout<<s.dernier()<<"\n";
+            s.next();}
+    }
 
+    catch(AutomateException e){
+        cout<<e.getInfo()<<"\n";
     }
 
     /*cout << "Creation d'etats" << endl;

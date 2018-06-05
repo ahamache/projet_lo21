@@ -263,7 +263,7 @@ unsigned int Etat2D::CountVoisin(unsigned int li, unsigned int co)const{
         limH=li;
     else limH=li-1;
 
-    if(li==nbLigne)
+    if(li==nbLigne-1)
         limB=li;
     else limB=li+1;
 
@@ -271,7 +271,7 @@ unsigned int Etat2D::CountVoisin(unsigned int li, unsigned int co)const{
         limG=co;
     else limG=co-1;
 
-    if(co==nbColonne)
+    if(co==nbColonne-1)
         limD=co;
     else limD=co+1;
 
@@ -281,7 +281,6 @@ unsigned int Etat2D::CountVoisin(unsigned int li, unsigned int co)const{
                     nb+=1;
         }
     }
-    //if(e.getCellule(li,co))
     if(valeurs[li][co])
         nb-=1;
     return nb;
@@ -293,27 +292,19 @@ void Automate2D::AppliquerTransition(const Etat2D& dep, Etat2D& dest) const{
         dest=dep;
     }
 
-    cout<<"ligne dep="<<dep.getRow()<<endl;
-    cout<<"ligne dest="<<dest.getRow()<<endl;
-
     for(unsigned int i=0; i<dep.getRow(); i++){
         for(unsigned int j=0; j<dep.getCol(); j++){
-
             unsigned int nbVoisin=dep.CountVoisin(i,j);
-            cout<<"Nb de voisins de la cellule "<<i<<j<<"="<<nbVoisin<<endl;
 
             if (dep.getCellule(i,j)){ //cellule vivante
                 if(nbVoisin<nbMinVivant || nbVoisin>nbMaxVivant)
                     dest.setCellule(i,j,false); //si trop ou pas assez de voisin alors la cellule meurt
-                cout<<"Nv etat apres application des regles ="<<dest.getCellule(i,j)<<endl;
             }
 
             else {
 
                 if(nbVoisin>=nbMinMort && nbVoisin<=nbMaxMort)
                     dest.setCellule(i,j,true); //si suffisament de cellule alors la cellule nait*/
-                cout<<"Nv etat apres application des regles ="<<dest.getCellule(i,j)<<endl;
-
             }
             cout<<"\n";
             }

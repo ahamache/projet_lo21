@@ -1,5 +1,7 @@
 #include <iostream>
 #include "autocell.h"
+#include "automate1D.h"
+#include "automate2D.h"
 
 using namespace std;
 

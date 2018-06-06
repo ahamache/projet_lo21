@@ -3,11 +3,10 @@
 
 #include "autocell.h"
 
-class Etat2D{ //grille de l'application
+class Etat2D : public Etat { //grille de l'application
 
     unsigned int nbLigne;
-    unsigned int nbColonne; //attributs valeurs et nbColonne dans la classe mère
-    bool** valeurs; //tableau d'int plutôt
+    valeurs* grille;
 
 public:
     Etat2D() : nbLigne(0), nbColonne(0), valeurs(nullptr) {}
@@ -24,7 +23,7 @@ public:
 
 std::ostream& operator<<(std::ostream& f, const Etat2D& e);
 
-class Automate2D{
+class Automate2D : public Automate{
 
     unsigned int nbMinVivant; /*sachant une cellule vivante, cb il
     faut de cellule vivante minimum pour qu'elle vive à t+1*/
@@ -42,7 +41,7 @@ public :
     void AppliquerTransition(const Etat2D& dep, Etat2D& dest) const;
 };
 
-class Simulateur2D{
+class Simulateur2D : public Simulateur{
 
     const Automate2D& automate;
     const Etat2D* depart=nullptr;

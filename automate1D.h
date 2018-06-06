@@ -6,9 +6,8 @@
 short unsigned int NumBitToNum(const std::string& num);
 std::string NumToNumBit(short unsigned int num);
 
-class Etat1D {
-	unsigned int nbColonnes;
-	bool* valeur;
+class Etat1D : public Etat {
+
 public:
 	Etat1D():nbColonnes(0), valeur(nullptr) {}
 	Etat1D(unsigned int n);
@@ -23,7 +22,7 @@ public:
 std::ostream& operator<<(std::ostream& f, const Etat1D& e);
 
 
-class Automate1D {
+class Automate1D :public Automate {
 	unsigned short int numero;
 	std::string numeroBit;
 	//friend class AutomateManager;
@@ -41,7 +40,7 @@ public:
 std::ostream& operator<<(std::ostream& f, const Automate1D& t);
 
 
-class Simulateur1D {
+class Simulateur1D : public Simulateur{
 	const Automate1D& automate;
     Etat1D** etats;
     const Etat1D* depart;

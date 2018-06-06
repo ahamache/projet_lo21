@@ -24,13 +24,15 @@
 1528279351 source:c:\users\ségolène.sÉgolÈne\projet_lo21\autocell.cpp
 	"autocell.h"
 
-1528279171 c:\users\ségolène.sÉgolÈne\projet_lo21\autocell.h
+1528280071 c:\users\ségolène.sÉgolÈne\projet_lo21\autocell.h
 	<string>
 	<iostream>
 
-1528208708 source:c:\users\ségolène.sÉgolÈne\projet_lo21\main.cpp
+1528279437 source:c:\users\ségolène.sÉgolÈne\projet_lo21\main.cpp
 	<iostream>
 	"autocell.h"
+	"automate1D.h"
+	"automate2D.h"
 
 1528279351 source:c:\users\ségolène.sÉgolÈne\projet_lo21\automate1d.cpp
 	"automate1D.h"

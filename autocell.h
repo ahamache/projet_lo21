@@ -3,6 +3,8 @@
 
 #include <string>
 #include <iostream>
+#include<typeinfo>
+
 
 using namespace std;
 
@@ -14,41 +16,55 @@ private:
 std::string info;
 };
 
+short unsigned int NumBitToNum(const std::string& num);
+std::string NumToNumBit(short unsigned int num);
 
 class Etat{
 
     unsigned int nbColonne;
-    int* valeurs;
-    //est-ce qu'on met un attribut dimension?
+    unsigned int nbLigne; // =1 quand 1D
+    bool** valeurs;
 
 public:
-    Etat(unsigned int n): nbColonne(n){}
+    Etat(unsigned int c, unsigned int l);
+    Etat() : nbLigne(0), nbColonne(0), valeurs(nullptr) {}
     unsigned int getLargeur()const {return nbColonne;}
-    virtual ~Etat(){}
-    virtual unsigned int getHauteur() const = 0; //définis plus tard
-    //fonction pour setLargeur ? pour ajuster l'état
+    unsigned int getHauteur()const {return nbLigne;}
+    //utile de faire une fonction quelle_dim ?
+    ~Etat();
+    bool getCellule(unsigned int i, unsigned int j) const;
+    void setCellule(unsigned int i, unsigned int j, bool val);
+	Etat(const Etat& e);
+	Etat& operator=(const Etat& e);
+
 };
+
+std::ostream& operator<<(std::ostream& f, const Etat& e);
+
 
 class Automate{
 
-    unsigned int nbEtat;
+    unsigned int nbEtat; //pour l'instant seulement 2
 
 public:
     Automate(unsigned int n=1) :  nbEtat(n){}
-    void setNbEtat(unsigned int m){nbEtat=e;}
+    void setNbEtat(unsigned int m){nbEtat=m;}
     unsigned short int getNbEtat() const {return nbEtat;}
     virtual void appliquerTransition(const Etat&, Etat&) const =0; //methode virtuelle pure
-
+    ~Automate()=default;
 };
+
 
 class Simulateur{
 
     const Automate& automate;
-    const Etat& depart=nullptr;
-    Etat** etats=nullptr;
+    const Etat* depart;
+    Etat** etats;
     unsigned int nbMaxEtats; //nb max qu'on sauvegarde dans le tableau etats
-    unsigned int rang=0;
-
+    unsigned int rang;
+    void build(unsigned int c);
+    Simulateur(const Simulateur& s)=delete;
+    Simulateur& operator=(const Simulateur& s)=delete;
 public :
     Simulateur(const Automate& a, unsigned int buf=2);
     Simulateur(const Automate& a, const Etat& dep, unsigned int buffer=2);
@@ -59,8 +75,6 @@ public :
     const Etat& dernier() const;
     unsigned int getRangDernier()const{return rang;}
     ~Simulateur();
-
 };
-
 
 #endif // AUTOCELL_H_INCLUDED

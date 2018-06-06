@@ -35,6 +35,10 @@
 		</Compiler>
 		<Unit filename="autocell.cpp" />
 		<Unit filename="autocell.h" />
+		<Unit filename="automate1D.cpp" />
+		<Unit filename="automate1D.h" />
+		<Unit filename="automate2D.cpp" />
+		<Unit filename="automate2D.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

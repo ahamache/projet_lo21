@@ -10,14 +10,25 @@ int main()
     Automate2D a(2,3,2,4);
 
     cout << "Creation d'etats" << endl;
-    Etat2D e2(7,4);
+    Etat e2(7,4);
+    cout<<"hauteur "<<e2.getHauteur()<<" largeur "<<e2.getLargeur()<<endl;
+
+    try{
     e2.setCellule(4,2,true);
     e2.setCellule(3,1,true);
     e2.setCellule(6,3,true);
     e2.setCellule(1,0,true);
     e2.setCellule(6,0,true);
+    }
+    catch (AutomateException e){
+        cout<<e.getInfo()<<endl;
+    }
 
-    Simulateur2D s(a,e2);
+    cout<<e2<<"ok"<<endl;
+
+    Simulateur s(a,e2);
+
+    cout<<"rang="<<s.getRangDernier();
 
     for(unsigned int i=0;i<10;i++){
             cout<<s.dernier()<<"\n";

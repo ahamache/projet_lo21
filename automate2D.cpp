@@ -2,9 +2,6 @@
 
 unsigned int Automate2D::CountVoisin(unsigned int li, unsigned int co, const Etat& e)const{
 
-    if(li<2) //on vérifie que l'automate est 2D car sinon pas les mêmes règles
-        throw("L'automate n'est pas 2D");
-
     unsigned int nb=0;
     unsigned int limH, limB, limG, limD;
 
@@ -55,8 +52,8 @@ void Automate2D::AppliquerTransition(const Etat& dep, Etat& dest) const{
         dest=dep;
     }
 
-    for(unsigned int i=0; i<dep.getLargeur(); i++){
-        for(unsigned int j=0; j<dep.getHauteur(); j++){
+    for(unsigned int i=0; i<dep.getHauteur(); i++){
+        for(unsigned int j=0; j<dep.getLargeur(); j++){
             unsigned int nbVoisin=CountVoisin(i,j,dep);
 
             if (dep.getCellule(i,j)){ //cellule vivante

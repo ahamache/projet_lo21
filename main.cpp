@@ -13,26 +13,27 @@ int main()
     Etat e2(7,4);
     cout<<"hauteur "<<e2.getHauteur()<<" largeur "<<e2.getLargeur()<<endl;
 
-    try{
     e2.setCellule(4,2,true);
     e2.setCellule(3,1,true);
     e2.setCellule(6,3,true);
     e2.setCellule(1,0,true);
     e2.setCellule(6,0,true);
-    }
-    catch (AutomateException e){
-        cout<<e.getInfo()<<endl;
-    }
 
     cout<<e2<<"ok"<<endl;
 
     Simulateur s(a,e2);
 
-    cout<<"rang="<<s.getRangDernier();
+    cout<<"rang="<<s.getRangDernier()<<endl;
+
+    try{
 
     for(unsigned int i=0;i<10;i++){
             cout<<s.dernier()<<"\n";
             s.next();}
+    }
+    catch(AutomateException e){
+        cout<<e.getInfo()<<endl;
+    }
 
     /*cout << "Creation d'etats" << endl;
     Etat1D e1(15);

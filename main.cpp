@@ -7,32 +7,41 @@ using namespace std;
 
 int main()
 {
-    Automate2D a(2,3,2,4);
-
-    cout << "Creation d'etats" << endl;
+    Automate2D a2(2,3,2,4);
     Etat e2(7,4);
-    cout<<"hauteur "<<e2.getHauteur()<<" largeur "<<e2.getLargeur()<<endl;
-
     e2.setCellule(4,2,true);
     e2.setCellule(3,1,true);
     e2.setCellule(6,3,true);
     e2.setCellule(1,0,true);
     e2.setCellule(6,0,true);
 
-    cout<<e2<<"ok"<<endl;
-
-    Simulateur s(a,e2);
-
-    cout<<"rang="<<s.getRangDernier()<<endl;
-
-    try{
+    Simulateur s(a2,e2);
 
     for(unsigned int i=0;i<10;i++){
             cout<<s.dernier()<<"\n";
             s.next();}
+
+    try {
+    Automate1D a1(30);
+
+    Etat e1(1,10);
+    e1.setCellule(0,2,true); //faire attentio à initialiser à 0 la ligne
+    e1.setCellule(0,6,true);
+    e1.setCellule(0,7,true);
+    e1.setCellule(0,9,true);
+
+    Simulateur s2(a1,e1);
+
+    cout<<"Automate 1D"<<endl;
+
+    for(unsigned int i=0;i<10;i++){
+            cout<<s2.dernier();
+            s2.next();}
     }
-    catch(AutomateException e){
-        cout<<e.getInfo()<<endl;
+
+    catch (AutomateException e){
+
+        cout<<e.getInfo();
     }
 
     /*cout << "Creation d'etats" << endl;

@@ -7,21 +7,25 @@ Automate1D::Automate1D(unsigned short int num, unsigned int nb):Automate(nb), nu
 Automate1D::Automate1D(const std::string& num, unsigned int nb) : Automate(nb), numero(NumBitToNum(num)),numeroBit(num) {
 }
 
-void Automate1D::appliquerTransition(const Etat& dep, Etat& dest) const {
+void Automate1D::AppliquerTransition(const Etat& dep, Etat& dest) const {
 
-    if (dep.getHauteur() > 1) //on vérifie que l'automate est 1D
+    if (dep.getLongueur() > 1) //on vérifie que l'automate est 1D
         throw AutomateException("L'automate n'est pas 1D");
 
-	if (dep.getHauteur() != dest.getHauteur()) dest = dep;
+	if (dep.getLargeur() != dest.getLargeur())
+        dest = dep;
 
-	for (unsigned int i = 0; i < dep.getHauteur(); i++) {
+	for (unsigned int i = 0; i < dep.getLargeur(); i++) {
 		unsigned short int conf=0;
 
-		if (i > 0) conf+=dep.getCellule(1, i - 1) * 4;
-		conf+=dep.getCellule(1,i)*2;
+		if (i > 0) //quand il y a un voisin à gauche
+            conf+=dep.getCellule(0, i - 1) * 4;
 
-		if (i < dep.getHauteur()-1) conf+=dep.getCellule(1, i + 1);
-		dest.setCellule(1, i, numeroBit[7-conf]-'0');
+		conf+=dep.getCellule(0,i)*2; //cellule elle même
+
+		if (i < dep.getLongueur()-1) //quand il y a un voisin à droite
+            conf+=dep.getCellule(0, i + 1);
+		dest.setCellule(0, i, numeroBit[7-conf]-'0');
 	}
 }
 

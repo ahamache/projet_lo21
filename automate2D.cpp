@@ -9,7 +9,7 @@ unsigned int Automate2D::CountVoisin(unsigned int li, unsigned int co, const Eta
         limH=li;
     else limH=li-1;
 
-    if(li==e.getHauteur()-1)
+    if(li==e.getLongueur()-1)
         limB=li;
     else limB=li+1;
 
@@ -45,14 +45,14 @@ Automate2D::Automate2D(unsigned int minV, unsigned int maxV, unsigned int minM, 
 
 void Automate2D::AppliquerTransition(const Etat& dep, Etat& dest) const{
 
-    if (dep.getHauteur() < 2) //on vérifie que l'automate est 2D
+    if (dep.getLongueur() < 2) //on vérifie que l'automate est 2D
         throw AutomateException("L'automate n'est pas 2D");
 
-    if(dest.getHauteur()!=dep.getHauteur()||dest.getLargeur()!=dep.getLargeur()){
+    if(dest.getLongueur()!=dep.getLongueur()||dest.getLargeur()!=dep.getLargeur()){
         dest=dep;
     }
 
-    for(unsigned int i=0; i<dep.getHauteur(); i++){
+    for(unsigned int i=0; i<dep.getLongueur(); i++){
         for(unsigned int j=0; j<dep.getLargeur(); j++){
             unsigned int nbVoisin=CountVoisin(i,j,dep);
 

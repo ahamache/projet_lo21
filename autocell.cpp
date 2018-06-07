@@ -119,7 +119,7 @@ Etat& Etat::operator=(const Etat& e){
 
 std::ostream& operator<<(std::ostream& f, const Etat& e){
 
-    for (unsigned int i=0; i<e.getHauteur(); ++i){
+    for (unsigned int i=0; i<e.getLongueur(); ++i){
         for (unsigned int j=0; j<e.getLargeur(); ++j)
             f<<e.getCellule(i,j);
         f<<endl;
@@ -129,7 +129,7 @@ std::ostream& operator<<(std::ostream& f, const Etat& e){
 }
 
 void Simulateur::setEtatDepart(const Etat& e){
-    if((typeid(automate).name()=="Automate1D" && e.getHauteur()!=1) || (typeid(automate).name()=="Automate2D" && e.getHauteur()==1))
+    if((typeid(automate).name()=="Automate1D" && e.getLongueur()!=1) || (typeid(automate).name()=="Automate2D" && e.getLongueur()==1))
         throw AutomateException("erreur : dimensions de l'automate et de l'etat incompatibles");
     depart = &e;
     if(etats[0]==nullptr)

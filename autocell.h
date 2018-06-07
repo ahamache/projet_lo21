@@ -29,7 +29,7 @@ public:
     Etat(unsigned int c, unsigned int l);
     Etat() : nbLigne(0), nbColonne(0), valeurs(nullptr) {}
     unsigned int getLargeur()const {return nbColonne;}
-    unsigned int getHauteur()const {return nbLigne;}
+    unsigned int getLongueur()const {return nbLigne;}
     //utile de faire une fonction quelle_dim ?
     ~Etat();
     bool getCellule(unsigned int i, unsigned int j) const;

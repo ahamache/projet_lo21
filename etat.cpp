@@ -1,5 +1,5 @@
 #include "etat.h"
-#include "autocell.h"
+#include "automate.h"
 
 Etat::Etat(unsigned int l, unsigned int c): nbColonne(c), nbLigne(l){
 
@@ -7,22 +7,22 @@ Etat::Etat(unsigned int l, unsigned int c): nbColonne(c), nbLigne(l){
         throw AutomateException("Mauvaise dimension de la matrice");
 
     else{
-        valeurs = new bool*[nbLigne];
+        valeurs = new unsigned int*[nbLigne];
         for (unsigned int i=0; i<nbLigne; i++){
-            valeurs[i] = new bool[nbColonne];
+            valeurs[i] = new unsigned int[nbColonne];
             for(unsigned int j=0; j<nbColonne; ++j)
-                valeurs[i][j]=false;
+                valeurs[i][j]=0;
                 }
     }
 }
 
-void Etat::setCellule(unsigned int i, unsigned int j, bool val) {
+void Etat::setCellule(unsigned int i, unsigned int j, unsigned int val) {
 	if (i >= nbLigne || j>=nbColonne)
         throw AutomateException("Cellule inexistante dimension trop élevée");
 	valeurs[i][j] = val;
 }
 
-bool Etat::getCellule(unsigned int i, unsigned int j) const{
+unsigned int Etat::getCellule(unsigned int i, unsigned int j) const{
     if (i>=nbLigne|| j>=nbColonne)
         throw AutomateException("Cellule inexistante");
     return valeurs[i][j];
@@ -41,10 +41,10 @@ Etat::Etat(const Etat& e): nbColonne(e.nbColonne), nbLigne(e.nbLigne), valeurs(n
         throw AutomateException("Mauvaise dimension");
 
     else {
-        valeurs = new bool*[nbLigne];
+        valeurs = new unsigned int*[nbLigne];
         for(unsigned int i=0; i<nbLigne; ++i){
 
-            valeurs[i]=new bool[nbColonne];
+            valeurs[i]=new unsigned int[nbColonne];
             for(unsigned int j=0; j<nbColonne; ++j){
                 valeurs[i][j]=e.valeurs[i][j];
             }
@@ -62,11 +62,11 @@ Etat& Etat::operator=(const Etat& e){
             delete[] valeurs;
 
             nbLigne=e.nbLigne;
-            valeurs=new bool*[nbLigne];
+            valeurs=new unsigned int*[nbLigne];
             nbColonne=e.nbColonne;
 
             for(unsigned int i=0; i<nbLigne;++i)
-                valeurs[i]=new bool[nbColonne];
+                valeurs[i]=new unsigned int[nbColonne];
             }
 
         else if(nbColonne!=e.nbColonne){
@@ -74,12 +74,12 @@ Etat& Etat::operator=(const Etat& e){
             nbColonne=e.nbColonne;
             for(unsigned int i=0;i<nbLigne;++i){
                 delete valeurs[i];
-                valeurs[i]=new bool[nbColonne];
+                valeurs[i]=new unsigned int[nbColonne];
             }
         }
 
-        for (unsigned int i;i<nbLigne;i++){
-            for(unsigned int j;j<nbColonne;++j)
+        for (unsigned int i=0;i<nbLigne;i++){
+            for(unsigned int j=0;j<nbColonne;++j)
                 valeurs[i][j]=e.valeurs[i][j];
         }
     }

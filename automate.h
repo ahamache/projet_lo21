@@ -10,10 +10,10 @@ using namespace std;
 
 class AutomateException {
 public:
-AutomateException(const std::string& message):info(message) {}
-std::string getInfo() const { return info; }
-private:
-std::string info;
+	AutomateException(const std::string& message):info(message) {}
+	std::string getInfo() const { return info; }
+	private:
+	std::string info;
 };
 
 short unsigned int NumBitToNum(const std::string& num);
@@ -21,13 +21,12 @@ std::string NumToNumBit(short unsigned int num);
 
 
 class Automate{
-    //unsigned int nbEtat; pour l'instant seulement 2
     friend class AutomateManager;
+    unsigned int nbEtats;
 public:
+    int getnbEtats() const {return nbEtats;}
     virtual ~Automate()=default;
-    Automate(){}
-    //void setNbEtat(unsigned int m){nbEtat=m;}
-    //unsigned short int getNbEtat() const {return nbEtat;}
+    Automate(int n=2) : nbEtats(n) {}
     virtual void AppliquerTransition(const Etat&, Etat&) const =0; //methode virtuelle pure
 
 };
@@ -75,8 +74,8 @@ class AutomateManager{ //Le manager gère un ensemble d'automate qui peut être 1D
     static AutomateManager* instance;
     Automate1D* automates1D[256];
     Automate2D** automates2D; //on ne créé pas un tableau de taille maximale car pas optimal
-    unsigned int tailleTab2D=50;
-    unsigned int nombre2DStockes=0; //le rang du dernier automate 2D rentré
+    unsigned int tailleTab2D;
+    unsigned int nombre2DStockes; //le rang du dernier automate 2D rentré
 
     AutomateManager();
     ~AutomateManager();

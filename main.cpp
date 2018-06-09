@@ -23,13 +23,13 @@ int main()
 
     /*for(unsigned int i=0;i<10;i++){
             cout<<s.dernier()<<"\n";
-            s.next();}
+            s.next();}*/
 
    /* try {
     Automate1D a1(30);
 
     Etat e1(1,10);
-    e1.setCellule(0,2,true); //faire attentio à initialiser à 0 la ligne
+    e1.setCellule(0,2,true); //faire attentio Ã  initialiser Ã  0 la ligne
     e1.setCellule(0,6,true);
     e1.setCellule(0,7,true);
     e1.setCellule(0,9,true);

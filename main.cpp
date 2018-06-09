@@ -19,12 +19,18 @@ int main()
     s.run(8);
 
     int temp=0;
-    for(Simulateur::Iterator it=s.getIterator();!it.isDone(); ++it){
+    /*for(Simulateur::ConstIterator it=s.getConstIterator();!it.isDone(); ++it){
             cout<<temp++<<"\n";
             cout<<*it;
             //cout<<s2.dernier();
             //s2.next();
-            }
+            }*/
+        for(unsigned int i=0;i<20;i++){
+
+        s.next();
+        cout<<s.dernier()<<"\n";
+
+    }
 
 
 

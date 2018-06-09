@@ -150,6 +150,7 @@ public :
 				throw AutomateException("error, next on an iterator which is done");
 			i--;
 			if (i == -1 && sim->rang >= sim->nbMaxEtats) i = sim->nbMaxEtats - 1;
+			return *this;
 		}
 		Etat& operator* () const {
 			if (isDone())
@@ -159,6 +160,35 @@ public :
 	};
 	Iterator getIterator() {
 		return Iterator(this);
+	}
+
+	class ConstIterator {
+		friend class Simulateur;
+        const Simulateur* sim;
+        int i;
+		ConstIterator(Simulateur* s):sim(s), i(s->rang){}
+	public:
+        ConstIterator():sim(nullptr),i(0) {}
+		bool isDone() const {
+			return ((sim == nullptr) ||
+				   (i == -1 && sim->rang<sim->nbMaxEtats) ||
+				   (i == sim->rang - sim->nbMaxEtats));
+		}
+		ConstIterator& operator++() {
+			if (isDone())
+				throw AutomateException("error, next on a constiterator which is done");
+			i--;
+			if (i == -1 && sim->rang >= sim->nbMaxEtats) i = sim->nbMaxEtats - 1;
+			return *this;
+		}
+		Etat& operator* () const {
+			if (isDone())
+				throw AutomateException("error, indirection on an iterator which is done");
+			return *sim->etats[i%sim->nbMaxEtats];
+		}
+	};
+	ConstIterator getConstIterator() {
+		return ConstIterator(this);
 	}
 };
 

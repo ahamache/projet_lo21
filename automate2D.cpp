@@ -28,7 +28,7 @@ unsigned int Automate2D::CountVoisin(unsigned int li, unsigned int co, const Eta
         }
     }
     if(e.getCellule(li, co))
-        nb-=1;
+        nb+=1;
     return nb;
 }
 
@@ -66,8 +66,8 @@ void Automate2D::AppliquerTransition(const Etat& dep, Etat& dest) const{
                 if(nbVoisin>=nbMinMort && nbVoisin<=nbMaxMort)
                     dest.setCellule(i,j,true); //si suffisament de cellule alors la cellule nait*/
             }
-            }
         }
+    }
 }
 
 std::ostream& operator<<(std::ostream& f, const Automate2D& A) {

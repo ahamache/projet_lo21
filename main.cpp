@@ -15,13 +15,20 @@ int main()
     e2.setCellule(1,0,true);
     e2.setCellule(6,0,true);
 
-    Simulateur s(a2,e2);
+    Simulateur s(a2,e2,10);
+    s.run(8);
 
-    for(unsigned int i=0;i<10;i++){
-            cout<<s.dernier()<<"\n";
-            s.next();}
+    int temp=0;
+    for(Simulateur::Iterator it=s.getIterator();!it.isDone(); ++it){
+            cout<<temp++<<"\n";
+            cout<<*it;
+            //cout<<s2.dernier();
+            //s2.next();
+            }
 
-    try {
+
+
+    /*try {
     Automate1D a1(30);
 
     Etat e1(1,10);
@@ -30,19 +37,24 @@ int main()
     e1.setCellule(0,7,true);
     e1.setCellule(0,9,true);
 
-    Simulateur s2(a1,e1);
+    Simulateur s2(a1,e1,10);
+    s2.run(10);
 
     cout<<"Automate 1D"<<endl;
-
-    for(unsigned int i=0;i<10;i++){
-            cout<<s2.dernier();
-            s2.next();}
+    //for(unsigned int i=0;i<10;i++){
+    int temp=0;
+    for(Simulateur::Iterator it=s2.getIterator();!it.isDone(); ++it){
+            cout<<temp++<<"\n";
+            cout<<*it;
+            //cout<<s2.dernier();
+            //s2.next();
+            }
     }
 
     catch (AutomateException e){
 
         cout<<e.getInfo();
-    }
+    }*/
 
     /*cout << "Creation d'etats" << endl;
     Etat1D e1(15);

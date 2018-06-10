@@ -7,7 +7,26 @@ using namespace std;
 
 int main()
 {
-    const Automate2D& a2=AutomateManager::getInstance().getAutomate2D(2,3,2,4);
+	AutomateEpidemie a3(3, 5);
+	cout << a3;
+	Etat e3(10, 10);
+	e3.setCellule(2, 3, 1);
+	e3.setCellule(4, 4, 1);
+	e3.setCellule(0, 0, 1);
+	e3.setCellule(3, 1, 1);
+	e3.setCellule(7, 6, 1);
+	e3.setCellule(9, 8, 1);
+	e3.setCellule(5, 5, 1);
+
+
+	Simulateur s3(a3, e3, 10);
+	for (unsigned int i = 0; i<10; i++) {
+		cout << s3.dernier() << "\n";
+		s3.next();
+	}
+
+
+    /*const Automate2D& a2=AutomateManager::getInstance().getAutomate2D(2,3,2,4);
     Etat e2(7,4);
     e2.setCellule(4,2,true);
     e2.setCellule(3,1,true);
@@ -21,15 +40,15 @@ int main()
         std::cout<<*it<<"\n";
 
 
-    /*for(unsigned int i=0;i<10;i++){
+    for(unsigned int i=0;i<10;i++){
             cout<<s.dernier()<<"\n";
-            s.next();}*/
+            s.next();}
 
    /* try {
     Automate1D a1(30);
 
     Etat e1(1,10);
-    e1.setCellule(0,2,true); //faire attentio Ã  initialiser Ã  0 la ligne
+    e1.setCellule(0,2,true); //faire attentio à initialiser à 0 la ligne
     e1.setCellule(0,6,true);
     e1.setCellule(0,7,true);
     e1.setCellule(0,9,true);

@@ -7,22 +7,22 @@ Etat::Etat(unsigned int l, unsigned int c): nbColonne(c), nbLigne(l){
         throw AutomateException("Mauvaise dimension de la matrice");
 
     else{
-        valeurs = new unsigned int*[nbLigne];
+        valeurs = new int*[nbLigne];
         for (unsigned int i=0; i<nbLigne; i++){
-            valeurs[i] = new unsigned int[nbColonne];
-            for(unsigned int j=0; j<nbColonne; ++j)
-                valeurs[i][j]=0;
+            valeurs[i] = new int[nbColonne];
+			for (unsigned int j = 0; j < nbColonne; ++j)
+				valeurs[i][j] = 0;
                 }
     }
 }
 
-void Etat::setCellule(unsigned int i, unsigned int j, unsigned int val) {
+void Etat::setCellule(unsigned int i, unsigned int j, int val) {
 	if (i >= nbLigne || j>=nbColonne)
         throw AutomateException("Cellule inexistante dimension trop élevée");
 	valeurs[i][j] = val;
 }
 
-unsigned int Etat::getCellule(unsigned int i, unsigned int j) const{
+int Etat::getCellule(unsigned int i, unsigned int j) const{
     if (i>=nbLigne|| j>=nbColonne)
         throw AutomateException("Cellule inexistante");
     return valeurs[i][j];
@@ -41,10 +41,10 @@ Etat::Etat(const Etat& e): nbColonne(e.nbColonne), nbLigne(e.nbLigne), valeurs(n
         throw AutomateException("Mauvaise dimension");
 
     else {
-        valeurs = new unsigned int*[nbLigne];
+        valeurs = new int*[nbLigne];
         for(unsigned int i=0; i<nbLigne; ++i){
 
-            valeurs[i]=new unsigned int[nbColonne];
+            valeurs[i]=new int[nbColonne];
             for(unsigned int j=0; j<nbColonne; ++j){
                 valeurs[i][j]=e.valeurs[i][j];
             }
@@ -54,7 +54,7 @@ Etat::Etat(const Etat& e): nbColonne(e.nbColonne), nbLigne(e.nbLigne), valeurs(n
 }
 
 Etat& Etat::operator=(const Etat& e){
-    if(this != &e){ //auto-affectation impossible
+    if(this != &e){ // si auto-affectation alors inutile de tout recopier
         if(nbLigne!=e.nbLigne){ //on refait tout le tableau car pas bon nombre de ligne dès le début
 
             for(unsigned int i=0;i<nbLigne;++i)
@@ -62,19 +62,19 @@ Etat& Etat::operator=(const Etat& e){
             delete[] valeurs;
 
             nbLigne=e.nbLigne;
-            valeurs=new unsigned int*[nbLigne];
+            valeurs=new int*[nbLigne]; //on reconstruit un tableau de pointeurs
             nbColonne=e.nbColonne;
 
             for(unsigned int i=0; i<nbLigne;++i)
-                valeurs[i]=new unsigned int[nbColonne];
+                valeurs[i]=new int[nbColonne];
             }
 
-        else if(nbColonne!=e.nbColonne){
+        else if(nbColonne!=e.nbColonne){ //il y a le bon nombre de ligne alors on reconstruit seulement les lignes
 
             nbColonne=e.nbColonne;
             for(unsigned int i=0;i<nbLigne;++i){
                 delete valeurs[i];
-                valeurs[i]=new unsigned int[nbColonne];
+                valeurs[i]=new int[nbColonne];
             }
         }
 

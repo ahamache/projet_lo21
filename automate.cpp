@@ -31,9 +31,10 @@ std::string NumToNumBit(short unsigned int num) {
 	return numeroBit;
 }
 
-Automate1D::Automate1D(unsigned short int num): numero(num),numeroBit(NumToNumBit(num)){}
+Automate1D::Automate1D(unsigned short int num, unsigned int nbE): Automate(nbE), numero(num),numeroBit(NumToNumBit(num)){}
+//nbE est le nb d'état attribut de la classe mère, on utilise le constructeur de la classe mère
 
-Automate1D::Automate1D(const std::string& num) : numero(NumBitToNum(num)),numeroBit(num){}
+Automate1D::Automate1D(const std::string& num, unsigned int nbE) : Automate(nbE), numero(NumBitToNum(num)),numeroBit(num){}
 
 void Automate1D::AppliquerTransition(const Etat& dep, Etat& dest) const {
 
@@ -86,7 +87,7 @@ unsigned int Automate2D::CountVoisin(unsigned int li, unsigned int co, const Eta
 
     for(unsigned int i=limH; i<=limB; i++){
         for(unsigned int j=limG; j<=limD; j++){
-                if(e.getCellule(i,j))
+                if(e.getCellule(i,j)==1)
                     nb+=1;
         }
     }
@@ -95,7 +96,8 @@ unsigned int Automate2D::CountVoisin(unsigned int li, unsigned int co, const Eta
     return nb;
 }
 
-Automate2D::Automate2D(unsigned int minV, unsigned int maxV, unsigned int minM, unsigned int maxM){ //n est le nb d'état attribut de la classe mère
+Automate2D::Automate2D(unsigned int minV, unsigned int maxV, unsigned int minM, unsigned int maxM, unsigned int nbE) : Automate(nbE){ 
+	//nbE est le nb d'état attribut de la classe mère
 
     if (minV>maxV || minM>maxV)
         throw AutomateException("minimum et maximum invalide");
@@ -119,15 +121,15 @@ void Automate2D::AppliquerTransition(const Etat& dep, Etat& dest) const{
         for(unsigned int j=0; j<dep.getLargeur(); j++){
             unsigned int nbVoisin=CountVoisin(i,j,dep);
 
-            if (dep.getCellule(i,j)){ //cellule vivante
+            if (dep.getCellule(i,j)==1){ //cellule vivante
                 if(nbVoisin<nbMinVivant || nbVoisin>nbMaxVivant)
-                    dest.setCellule(i,j,false); //si trop ou pas assez de voisin alors la cellule meurt
+                    dest.setCellule(i,j,0); //si trop ou pas assez de voisin alors la cellule meurt
             }
 
             else {
 
                 if(nbVoisin>=nbMinMort && nbVoisin<=nbMaxMort)
-                    dest.setCellule(i,j,true); //si suffisament de cellule alors la cellule nait*/
+                    dest.setCellule(i,j,1); //si suffisament de cellule alors la cellule nait*/
             }
             }
         }
@@ -138,6 +140,88 @@ std::ostream& operator<<(std::ostream& f, const Automate2D& A) {
 	<<"Regle cellule morte :"<<endl<<"Nombre minimum = " << A.getMinM() <<endl<<"Nombre maximum"<<A.getMaxM();
 
 	return f;
+}
+
+std::ostream& operator<<(std::ostream& f, const AutomateEpidemie& A) {
+
+	f << "Etant malade, une cellule a " << A.getChance1() << "/10 de mourir" << endl;
+	f << "Etant saine, une cellule a " << A.getChance2() << "/10 de tomber malade" << endl;
+	return f;
+}
+
+
+AutomateEpidemie::AutomateEpidemie(unsigned int c1, unsigned int c2, unsigned int nbE) : Automate(nbE), chance1(c1), chance2(c2) {}
+
+/*
+0 -> saine //la grille est initialisée à saine et ensuite on met quelques malades sur la grille 
+1 -> malade
+2 -> immunisé
+3 -> mort
+*/
+
+unsigned int AutomateEpidemie::CountVoisinMalade(unsigned int li, unsigned int co, const Etat& e)const {
+
+	unsigned int nbM = 0;
+	unsigned int limH, limB, limG, limD;
+
+	if (li == 0)
+		limH = li;
+	else limH = li - 1;
+
+	if (li == e.getLongueur() - 1)
+		limB = li;
+	else limB = li + 1;
+
+	if (co == 0)
+		limG = co;
+	else limG = co - 1;
+
+	if (co == e.getLargeur() - 1)
+		limD = co;
+	else limD = co + 1;
+
+	for (unsigned int i = limH; i <= limB; i++) {
+		for (unsigned int j = limG; j <= limD; j++) {
+			if (e.getCellule(i, j)==1) //la cellule possède au moins un voisin malade
+				return true;
+		}
+	}
+//on ne fait pas de test sur la cellule elle-même car on appelle la fonction pour une cellule saine donc n'augmentera jamais le nb de malade
+	return false;
+}
+
+void AutomateEpidemie::AppliquerTransition(const Etat& dep, Etat& dest) const {
+
+	if (dep.getLongueur() < 2) //on vérifie que l'automate est 2D
+		throw AutomateException("L'automate n'est pas 2D");
+
+	if (dest.getLongueur() != dep.getLongueur() || dest.getLargeur() != dep.getLargeur()) {
+		dest = dep;
+	}
+
+	for (unsigned int i = 0; i < dep.getLongueur(); i++) {
+		for (unsigned int j = 0; j < dep.getLargeur(); j++) {
+
+			if (dep.getCellule(i, j) == 1) { //la cellule est malade
+
+				unsigned int p = rand() % 11; //on veut un chiffre entre 0 et 10
+				if (p <= chance1) //si le chiffre obtenu est inférieur ou égal à la chance de mourir alors elle meurt
+					dest.setCellule(i, j, 3);
+				else dest.setCellule(i, j, 2); //la cellule devient immunisée
+			}
+
+			if (dep.getCellule(i, j) == 0) { //la cellule est saine 
+				unsigned int nbVoisinM = CountVoisinMalade(i, j, dep);
+				if (nbVoisinM > 0) { //la cellule a au moins un voisin malade
+					unsigned int p = rand() % 11;
+					if (p <= chance2)
+						dest.setCellule(i, j, 1);
+					//sinon reste dans le même état sain
+				}
+			}
+			//sinon une cellule morte reste morte et une immunisée reste immunisée
+		}
+	}
 }
 
 
@@ -218,3 +302,4 @@ const Automate2D& AutomateManager::getAutomate2D(unsigned int miniV, unsigned in
     }
     return *automates2D[indice];
 }
+

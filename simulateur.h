@@ -11,8 +11,8 @@ class Simulateur{
     const Automate& automate;
     const Etat* depart;
     Etat** etats;
-    unsigned int nbMaxEtats; //nb max qu'on sauvegarde dans le tableau etats
-    unsigned int rang;
+    unsigned int nbMaxEtats=0; //nb max qu'on sauvegarde dans le tableau etats
+    unsigned int rang=0;
     void build(unsigned int c);
     Simulateur(const Simulateur& s)=delete;
     Simulateur& operator=(const Simulateur& s)=delete;

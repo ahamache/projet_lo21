@@ -226,13 +226,20 @@ void AutomateEpidemie::AppliquerTransition(const Etat& dep, Etat& dest) const {
 
 
 
-AutomateManager::AutomateManager() : tailleTab2D(50), nombre2DStockes(0){
-
+AutomateManager::AutomateManager() : tailleTab2D(50), nb2DStockes(0), tailleTabEp(50), nbEpStockes(0){
+	//initialisation du tableau d'automate 1D
     for(unsigned int i=0; i<256; i++)
         automates1D[i]=nullptr;
+
+	//initialisation du tableau d'automate 2D (jeu de la vie)
     automates2D = new Automate2D*[tailleTab2D];
     for(unsigned int i=0; i<tailleTab2D; i++)
         automates2D[i]=nullptr;
+
+	//initialisation du tableau d'automate Epidémie
+	automatesEp = new AutomateEpidemie*[tailleTabEp];
+	for (unsigned int i = 0; i<tailleTabEp; i++)
+		automatesEp[i] = nullptr;
 }
 
 AutomateManager::~AutomateManager(){
@@ -242,6 +249,9 @@ AutomateManager::~AutomateManager(){
 
     for(unsigned int i=0; i<tailleTab2D; i++)
         delete automates2D[i];
+
+	for (unsigned int i = 0; i<tailleTabEp; i++)
+		delete automatesEp[i];
 }
 
 AutomateManager& AutomateManager::getInstance(){
@@ -267,9 +277,9 @@ const Automate1D& AutomateManager::getAutomate1D(const string& num){
     return getAutomate1D(NumBitToNum(num));
 }
 
-int AutomateManager::indice_automate(unsigned int a, unsigned int b, unsigned int c, unsigned int d) const{
+int AutomateManager::indice_automate2D(unsigned int a, unsigned int b, unsigned int c, unsigned int d) const{
 
-    for(unsigned int i=0;i<getnombre2DStockes();i++){ //on inspecte tout les éléments jusqu'au dernier
+    for(unsigned int i=0;i<getNb2DStockes();i++){ //on inspecte tout les éléments jusqu'au dernier
 
         if(automates2D[i]->getMinV()==a && automates2D[i]->getMaxV()==b && automates2D[i]->getMinM()==c && automates2D[i]->getMaxM()==d)
             return i;
@@ -280,11 +290,11 @@ int AutomateManager::indice_automate(unsigned int a, unsigned int b, unsigned in
 
 const Automate2D& AutomateManager::getAutomate2D(unsigned int miniV, unsigned int maxiV, unsigned int miniM, unsigned int maxiM){
 
-    int indice=indice_automate(miniV, maxiV, miniM, maxiM);
+    int indice=indice_automate2D(miniV, maxiV, miniM, maxiM);
 
     if(indice==-1){ //l'automate n'a jamais été rentré dans le tableau automates2D[]
 
-        if(nombre2DStockes==tailleTab2D){ //le tableau est complet, il faut l'agrandir
+        if(nb2DStockes==tailleTab2D){ //le tableau est complet, il faut l'agrandir
 
             Automate2D** newtab=new Automate2D*[tailleTab2D + 10];
 
@@ -297,9 +307,47 @@ const Automate2D& AutomateManager::getAutomate2D(unsigned int miniV, unsigned in
             delete[] old;
         }
 
-        automates2D[nombre2DStockes]=new Automate2D(miniV, maxiV, miniM, maxiM);
-        return *automates2D[nombre2DStockes++];
+        automates2D[nb2DStockes]=new Automate2D(miniV, maxiV, miniM, maxiM);
+        return *automates2D[nb2DStockes++];
     }
     return *automates2D[indice];
 }
 
+
+int AutomateManager::indice_automateEp(unsigned int a, unsigned int b) const {
+
+	for (unsigned int i = 0; i<getNbEpStockes(); i++) { //on inspecte tous les éléments stockés dans le tableau jusqu'au dernier
+
+		if (automatesEp[i]->getChance1() == a && automatesEp[i]->getChance2() == b)
+			return i;
+	}
+
+	return -1; //l'automate n'existe pas dans le tableau
+}
+
+
+const AutomateEpidemie& AutomateManager::getAutomateEp(unsigned int c1, unsigned int c2) {
+
+	int indice = indice_automateEp(c1, c2);
+
+	if (indice == -1) { //l'automate n'a jamais été rentré dans le tableau automatesEp[]
+
+		if (nbEpStockes == tailleTabEp) { //le tableau est complet, il faut l'agrandir
+
+			AutomateEpidemie** newtab = new AutomateEpidemie*[tailleTabEp + 10];
+
+			for (unsigned int i = 0; i<tailleTabEp; i++)
+				newtab[i] = automatesEp[i];
+
+			AutomateEpidemie** old = automatesEp;
+			automatesEp = newtab;
+			tailleTabEp += 10;
+			delete[] old;
+		}
+
+		automatesEp[nbEpStockes] = new AutomateEpidemie(c1, c2);
+		return *automatesEp[nbEpStockes++];
+	}
+	return *automatesEp[indice];
+
+}

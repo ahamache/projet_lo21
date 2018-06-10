@@ -96,10 +96,20 @@ std::ostream& operator<<(std::ostream& f, const AutomateEpidemie& A);
 class AutomateManager{ //Le manager gère un ensemble d'automate qui peut être 1D ou 2D
 
     static AutomateManager* instance;
-    Automate1D* automates1D[256];
+    
+	//Trois tableaux où on stocke les différents automates : 
+	Automate1D* automates1D[256];
     Automate2D** automates2D; //on ne créé pas un tableau de taille maximale car pas optimal
+	//Automate2D est le jeu de la vie
+	AutomateEpidemie** automatesEp; 
+
+	//Attributs pour le tableau d'automates 2D
     unsigned int tailleTab2D=50;
-    unsigned int nombre2DStockes=0; //le rang du dernier automate 2D rentré
+    unsigned int nb2DStockes=0; //le rang du dernier automate 2D rentré
+
+	//Attributs pour le tableau d'automates Epidemie
+	unsigned int tailleTabEp = 50;
+	unsigned int nbEpStockes = 0;
 
     AutomateManager();
     ~AutomateManager();
@@ -120,12 +130,21 @@ public:
         delete handler.instance;
         handler.instance=nullptr;
     }
+
+	//fonctions pour récupérer un automate stocké par le simulateur ou le construire s'il n'existe pas
     const Automate1D& getAutomate1D(short unsigned int num);
     const Automate1D& getAutomate1D(const string& num);
     const Automate2D& getAutomate2D(unsigned int miniV, unsigned int maxiV, unsigned int miniM, unsigned int maxiM);
+	const AutomateEpidemie& getAutomateEp(unsigned int c1, unsigned int c2);
+
+
     unsigned int getDim2D()const {return tailleTab2D;}
-    unsigned int getnombre2DStockes()const {return nombre2DStockes;}
-    int indice_automate(unsigned int a, unsigned int b, unsigned int c, unsigned int d) const; //retourne l'indice dans le tableau ou -1 si jamais rentré
+    unsigned int getNb2DStockes()const {return nb2DStockes;}
+    int indice_automate2D(unsigned int a, unsigned int b, unsigned int c, unsigned int d) const; //retourne l'indice dans le tableau ou -1 si jamais rentré
+
+	unsigned int getDimEp()const { return tailleTabEp; }
+	unsigned int getNbEpStockes()const { return nbEpStockes; }
+	int indice_automateEp(unsigned int c1, unsigned int c2) const;
 
 };
 

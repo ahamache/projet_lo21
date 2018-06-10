@@ -7,8 +7,7 @@ using namespace std;
 
 int main()
 {
-	AutomateEpidemie a3(3, 5);
-	cout << a3;
+	const AutomateEpidemie& a3 = AutomateManager::getInstance().getAutomateEp(3, 5);
 	Etat e3(10, 10);
 	e3.setCellule(2, 3, 1);
 	e3.setCellule(4, 4, 1);
@@ -18,15 +17,20 @@ int main()
 	e3.setCellule(9, 8, 1);
 	e3.setCellule(5, 5, 1);
 
+	Simulateur s(a3, e3, 10);
+	s.run(10);
+	for (Simulateur::ConstIterator it = s.getConstIterator(); !it.isDone(); ++it)
+		std::cout << *it << "\n";
 
-	Simulateur s3(a3, e3, 10);
+
+	/*Simulateur s3(a3, e3, 10);
 	for (unsigned int i = 0; i<10; i++) {
 		cout << s3.dernier() << "\n";
 		s3.next();
 	}
 
 
-    /*const Automate2D& a2=AutomateManager::getInstance().getAutomate2D(2,3,2,4);
+    const Automate2D& a2=AutomateManager::getInstance().getAutomate2D(2,3,2,4);
     Etat e2(7,4);
     e2.setCellule(4,2,true);
     e2.setCellule(3,1,true);
@@ -44,7 +48,7 @@ int main()
             cout<<s.dernier()<<"\n";
             s.next();}
 
-   /* try {
+    try {
     Automate1D a1(30);
 
     Etat e1(1,10);

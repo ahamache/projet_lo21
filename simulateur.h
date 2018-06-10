@@ -30,27 +30,14 @@ public :
     class Iterator {
 		friend class Simulateur;
         Simulateur* sim;
-        int i;
-		Iterator(Simulateur* s):sim(s), i(s->rang){}
+        const unsigned int i;
+		int j;
+		Iterator(Simulateur* s);
 	public:
-        Iterator():sim(nullptr),i(0) {}
-		bool isDone() const {
-			return ((sim == nullptr) ||
-				   (i == -1 && sim->rang<sim->nbMaxEtats) ||
-				   (i == sim->rang - sim->nbMaxEtats));
-		}
-		Iterator& operator++() {
-			if (isDone())
-				throw AutomateException("error, next on an iterator which is done");
-			i--;
-			if (i == -1 && sim->rang >= sim->nbMaxEtats) i = sim->nbMaxEtats - 1;
-			return *this;
-		}
-		Etat& operator* () const {
-			if (isDone())
-				throw AutomateException("error, indirection on an iterator which is done");
-			return *sim->etats[i%sim->nbMaxEtats];
-		}
+		Iterator();
+		bool isDone() const;
+		Iterator& operator++();
+		Etat& operator* () const;
 	};
 	Iterator getIterator() {
 		return Iterator(this);
@@ -59,27 +46,14 @@ public :
 	class ConstIterator {
 		friend class Simulateur;
         const Simulateur* sim;
-        int i;
-		ConstIterator(Simulateur* s):sim(s), i(s->rang){}
+        const unsigned int i;
+		int j;
+		ConstIterator(Simulateur* s);
 	public:
-        ConstIterator():sim(nullptr),i(0) {}
-		bool isDone() const {
-			return ((sim == nullptr) ||
-				   (i == -1 && sim->rang<sim->nbMaxEtats) ||
-				   (i == sim->rang - sim->nbMaxEtats));
-		}
-		ConstIterator& operator++() {
-			if (isDone())
-				throw AutomateException("error, next on a constiterator which is done");
-			i--;
-			if (i == -1 && sim->rang >= sim->nbMaxEtats) i = sim->nbMaxEtats - 1;
-			return *this;
-		}
-		Etat& operator* () const {
-			if (isDone())
-				throw AutomateException("error, indirection on an iterator which is done");
-			return *sim->etats[i%sim->nbMaxEtats];
-		}
+		ConstIterator();
+		bool isDone() const;
+		ConstIterator& operator++();
+		Etat& operator* () const;
 	};
 	ConstIterator getConstIterator() {
 		return ConstIterator(this);

@@ -146,7 +146,7 @@ Xml_Dom::ajouter_Automate1D(unsigned int n){ //ajouter avec le numero de règle
     }
 
     QTextStream stream(&fichier);
-    stream << write_doc; // l'opérateur << permet d'écrire dans write_doc
+    stream << "<?xml version='1.0' encoding='UTF-8'?>"<<write_doc; // l'opérateur << permet d'écrire dans write_doc
     fichier.close();
 }
 
@@ -199,7 +199,7 @@ Xml_Dom::ajouter_Automate2D(unsigned int mnV, unsigned int mxV, unsigned int mnM
     }
 
     QTextStream stream(&fichier);
-    stream << write_doc; // l'opérateur << permet d'écrire dans write_doc
+    stream << "<?xml version='1.0' encoding='UTF-8'?>"<< write_doc; // l'opérateur << permet d'écrire dans write_doc
     fichier.close();
 
 }
@@ -245,7 +245,7 @@ Xml_Dom::ajouter_AutomateEp(unsigned int c1, unsigned int c2){ //ajouter avec le
     }
 
     QTextStream stream(&fichier);
-    stream << write_doc; // l'opérateur << permet d'écrire dans write_doc
+    stream << "<?xml version='1.0' encoding='UTF-8'?>"<< write_doc; // l'opérateur << permet d'écrire dans write_doc
     fichier.close();
 
 }

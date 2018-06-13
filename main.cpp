@@ -14,11 +14,16 @@ int main()
 
 	unsigned int nb=AutomateManager::getInstance().getNbEpStockes();
 
-    for(unsigned int i=0; i<nb;i++){
-
+    for(unsigned int i=0; i<nb;i++)
         cout<<"chance1="<<AutomateManager::getInstance().getElemEp(i).getChance1()<<endl;
 
-    }
+	for (std::vector<string>::iterator it = AutomateManager::getInstance().TypesAutomates.begin(); it != AutomateManager::getInstance().TypesAutomates.end(); ++it)
+			std::cout << *it << std::endl;
+
+	std::system("pause");
+	return 0;
+
+};
 
 	/*Etat e3(10, 10);
 	e3.setCellule(2, 3, 1);
@@ -116,7 +121,7 @@ int main()
 
     }*/
 
-	system("pause");
+	/*system("pause");
 
     return 0;
-}
+}*/

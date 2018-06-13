@@ -6,6 +6,7 @@
 #include<typeinfo>
 #include "etat.h"
 #include <cstdlib> //pour le rand()
+#include <vector>
 
 using namespace std;
 
@@ -24,9 +25,10 @@ std::string NumToNumBit(short unsigned int num);
 class Automate{
     unsigned int nbEtats;
     friend class AutomateManager;
+protected:
+	Automate(unsigned int n) : nbEtats(n) {}
 public:
     virtual ~Automate()=default;
-    Automate(unsigned int n) : nbEtats(n){}
     //void setNbEtat(unsigned int m){nbEtat=m;}
     unsigned int getNbEtats() const {return nbEtats;}
     virtual void AppliquerTransition(const Etat&, Etat&) const =0; //methode virtuelle pure --> la classe est abstraite donc non instanciable
@@ -60,10 +62,10 @@ class Automate2D : public Automate{
     friend class AutomateManager;
 
 public :
-    const unsigned int getMinV()const{return nbMinVivant;}
-    const unsigned int getMaxV()const{return nbMaxVivant;}
-    const unsigned int getMinM()const{return nbMinMort;}
-    const unsigned int getMaxM()const{return nbMaxMort;}
+    unsigned int getMinV()const{return nbMinVivant;}
+    unsigned int getMaxV()const{return nbMaxVivant;}
+    unsigned int getMinM()const{return nbMinMort;}
+    unsigned int getMaxM()const{return nbMaxMort;}
 	unsigned int CountVoisin(unsigned int li, unsigned int co, const Etat& e) const;
     void AppliquerTransition(const Etat& dep, Etat& dest) const;
 };
@@ -82,8 +84,8 @@ class AutomateEpidemie : public Automate {
 public :
 	AutomateEpidemie(unsigned int c1 = 0, unsigned int c2 = 0, unsigned int nbE = 4);
 	~AutomateEpidemie() = default;
-	const unsigned int getChance1() const { return chance1; }
-	const unsigned int getChance2() const { return chance2; }
+	unsigned int getChance1() const { return chance1; }
+	unsigned int getChance2() const { return chance2; }
 	unsigned int CountVoisinMalade(unsigned int li, unsigned int co, const Etat& e) const;
 	void AppliquerTransition(const Etat& dep, Etat& dest) const;
 
@@ -93,7 +95,7 @@ public :
 std::ostream& operator<<(std::ostream& f, const AutomateEpidemie& A);
 
 
-class AutomateManager{ //Le manager gère un ensemble d'automate qui peut être 1D ou 2D
+class AutomateManager{ //Le manager gère un ensemble d'automate qui peut être 1D, 2D ou Epidemie
 
     static AutomateManager* instance;
 
@@ -139,13 +141,13 @@ public:
     const Automate2D& getAutomate2D(unsigned int miniV, unsigned int maxiV, unsigned int miniM, unsigned int maxiM);
 	const AutomateEpidemie& getAutomateEp(unsigned int c1, unsigned int c2);
 
-    unsigned int getDim2D()const {return tailleTab2D;}
-    unsigned int getNb2DStockes()const {return nb2DStockes;}
+    unsigned int getDim2D() const {return tailleTab2D;}
+    unsigned int getNb2DStockes() const {return nb2DStockes;}
     int indice_automate2D(unsigned int a, unsigned int b, unsigned int c, unsigned int d) const; //retourne l'indice dans le tableau ou -1 si jamais rentré
     const Automate2D& getElem2D(unsigned int n) const;
 
-	unsigned int getDimEp()const { return tailleTabEp; }
-	unsigned int getNbEpStockes()const { return nbEpStockes; }
+	unsigned int getDimEp() const { return tailleTabEp; }
+	unsigned int getNbEpStockes() const { return nbEpStockes; }
 	int indice_automateEp(unsigned int c1, unsigned int c2) const;
     const AutomateEpidemie& getElemEp(unsigned int n) const;
 

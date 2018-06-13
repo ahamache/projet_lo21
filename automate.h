@@ -74,12 +74,12 @@ std::ostream& operator<<(std::ostream& f, const Automate2D& A);
 
 class AutomateEpidemie : public Automate {
 
-	unsigned int chance1; //étant malade, chance /10 de mourir 
+	unsigned int chance1; //étant malade, chance /10 de mourir
 	unsigned int chance2; //étant sain, chance /10 de tomber malade
-	
+
 	friend class AutomateManager;
 
-public : 
+public :
 	AutomateEpidemie(unsigned int c1 = 0, unsigned int c2 = 0, unsigned int nbE = 4);
 	~AutomateEpidemie() = default;
 	const unsigned int getChance1() const { return chance1; }
@@ -96,12 +96,12 @@ std::ostream& operator<<(std::ostream& f, const AutomateEpidemie& A);
 class AutomateManager{ //Le manager gère un ensemble d'automate qui peut être 1D ou 2D
 
     static AutomateManager* instance;
-    
-	//Trois tableaux où on stocke les différents automates : 
+
+	//Trois tableaux où on stocke les différents automates :
 	Automate1D* automates1D[256];
     Automate2D** automates2D; //on ne créé pas un tableau de taille maximale car pas optimal
 	//Automate2D est le jeu de la vie
-	AutomateEpidemie** automatesEp; 
+	AutomateEpidemie** automatesEp;
 
 	//Attributs pour le tableau d'automates 2D
     unsigned int tailleTab2D=50;
@@ -131,20 +131,23 @@ public:
         handler.instance=nullptr;
     }
 
+    std::vector<string> TypesAutomates;
+
 	//fonctions pour récupérer un automate stocké par le simulateur ou le construire s'il n'existe pas
     const Automate1D& getAutomate1D(short unsigned int num);
     const Automate1D& getAutomate1D(const string& num);
     const Automate2D& getAutomate2D(unsigned int miniV, unsigned int maxiV, unsigned int miniM, unsigned int maxiM);
 	const AutomateEpidemie& getAutomateEp(unsigned int c1, unsigned int c2);
 
-
     unsigned int getDim2D()const {return tailleTab2D;}
     unsigned int getNb2DStockes()const {return nb2DStockes;}
     int indice_automate2D(unsigned int a, unsigned int b, unsigned int c, unsigned int d) const; //retourne l'indice dans le tableau ou -1 si jamais rentré
+    const Automate2D& getElem2D(unsigned int n) const;
 
 	unsigned int getDimEp()const { return tailleTabEp; }
 	unsigned int getNbEpStockes()const { return nbEpStockes; }
 	int indice_automateEp(unsigned int c1, unsigned int c2) const;
+    const AutomateEpidemie& getElemEp(unsigned int n) const;
 
 };
 

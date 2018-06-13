@@ -8,7 +8,19 @@ using namespace std;
 int main()
 {
 	const AutomateEpidemie a3 = AutomateManager::getInstance().getAutomateEp(7, 5);
-	Etat e3(10, 10);
+    const AutomateEpidemie a2 = AutomateManager::getInstance().getAutomateEp(6, 2);
+	const AutomateEpidemie a1 = AutomateManager::getInstance().getAutomateEp(1, 3);
+	const AutomateEpidemie a6 = AutomateManager::getInstance().getAutomateEp(5, 5);
+
+	unsigned int nb=AutomateManager::getInstance().getNbEpStockes();
+
+    for(unsigned int i=0; i<nb;i++){
+
+        cout<<"chance1="<<AutomateManager::getInstance().getElemEp(i).getChance1()<<endl;
+
+    }
+
+	/*Etat e3(10, 10);
 	e3.setCellule(2, 3, 1);
 	e3.setCellule(4, 4, 1);
 	e3.setCellule(0, 0, 1);
@@ -18,18 +30,18 @@ int main()
 	e3.setCellule(5, 5, 1);
 	Etat e4 = e3;
 	std::cout << e3 << "\n";
-	Simulateur s(a3, e3, 10);
-	/*for (unsigned int i = 1;i <= 15;i++) {
+	Simulateur s(a, e3, 10);
+	for (unsigned int i = 1;i <= 15;i++) {
 		cout << "next numero " << i << "\n";
 		s.next();
 		cout << s.dernier();
-	}*/
+	}
 
 	s.run(10);
 	//std::cout << "rang = "<<s.getRangDernier()<<"\n"<<"generation" << std::endl;
 	int j = 0;
 	for (Simulateur::ConstIterator it = s.getConstIterator(); !it.isDone(); ++it)
-		std::cout << "iteration n° "<<++j << "\n" << *it << "\n\n";
+		std::cout << "iteration "<<++j << "\n" << *it << "\n\n";
 	//std::cout << e4 << "\n";
 
 
@@ -81,7 +93,7 @@ int main()
         cout<<e.getInfo();
     }
 
-    /*cout << "Creation d'etats" << endl;
+    cout << "Creation d'etats" << endl;
     Etat1D e1(15);
     e1.setCellule(4,true);
     e1.setCellule(3,true);

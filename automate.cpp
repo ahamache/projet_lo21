@@ -96,7 +96,7 @@ unsigned int Automate2D::CountVoisin(unsigned int li, unsigned int co, const Eta
     return nb;
 }
 
-Automate2D::Automate2D(unsigned int minV, unsigned int maxV, unsigned int minM, unsigned int maxM, unsigned int nbE) : Automate(nbE){ 
+Automate2D::Automate2D(unsigned int minV, unsigned int maxV, unsigned int minM, unsigned int maxM, unsigned int nbE) : Automate(nbE){
 	//nbE est le nb d'état attribut de la classe mère
 
     if (minV>maxV || minM>maxV)
@@ -153,7 +153,7 @@ std::ostream& operator<<(std::ostream& f, const AutomateEpidemie& A) {
 AutomateEpidemie::AutomateEpidemie(unsigned int c1, unsigned int c2, unsigned int nbE) : Automate(nbE), chance1(c1), chance2(c2) {}
 
 /*
-0 -> saine //la grille est initialisée à saine et ensuite on met quelques malades sur la grille 
+0 -> saine //la grille est initialisée à saine et ensuite on met quelques malades sur la grille
 1 -> malade
 2 -> immunisé
 3 -> mort
@@ -161,7 +161,6 @@ AutomateEpidemie::AutomateEpidemie(unsigned int c1, unsigned int c2, unsigned in
 
 unsigned int AutomateEpidemie::CountVoisinMalade(unsigned int li, unsigned int co, const Etat& e)const {
 
-	unsigned int nbM = 0;
 	unsigned int limH, limB, limG, limD;
 
 	if (li == 0)
@@ -210,7 +209,7 @@ void AutomateEpidemie::AppliquerTransition(const Etat& dep, Etat& dest) const {
 				else dest.setCellule(i, j, 2); //la cellule devient immunisée
 			}
 
-			if (dep.getCellule(i, j) == 0) { //la cellule est saine 
+			if (dep.getCellule(i, j) == 0) { //la cellule est saine
 				unsigned int nbVoisinM = CountVoisinMalade(i, j, dep);
 				if (nbVoisinM > 0) { //la cellule a au moins un voisin malade
 					unsigned int p = rand() % 11;
@@ -226,7 +225,7 @@ void AutomateEpidemie::AppliquerTransition(const Etat& dep, Etat& dest) const {
 
 
 
-AutomateManager::AutomateManager() : tailleTab2D(50), nb2DStockes(0), tailleTabEp(50), nbEpStockes(0){
+AutomateManager::AutomateManager() : tailleTab2D(50), nb2DStockes(0), tailleTabEp(50), nbEpStockes(0), TypesAutomates(){
 	//initialisation du tableau d'automate 1D
     for(unsigned int i=0; i<256; i++)
         automates1D[i]=nullptr;
@@ -240,6 +239,10 @@ AutomateManager::AutomateManager() : tailleTab2D(50), nb2DStockes(0), tailleTabE
 	automatesEp = new AutomateEpidemie*[tailleTabEp];
 	for (unsigned int i = 0; i<tailleTabEp; i++)
 		automatesEp[i] = nullptr;
+
+    TypesAutomates.push_back("Automate1D");
+	TypesAutomates.push_back("Automate2D");
+	TypesAutomates.push_back("AutomateEpidemie");
 }
 
 AutomateManager::~AutomateManager(){
@@ -349,5 +352,20 @@ const AutomateEpidemie& AutomateManager::getAutomateEp(unsigned int c1, unsigned
 		return *automatesEp[nbEpStockes++];
 	}
 	return *automatesEp[indice];
-
 }
+
+const Automate2D& AutomateManager::getElem2D(unsigned int n) const { //permet de retourner l'élément du tableau automates2D à l'indice n
+
+    if(n>nb2DStockes)
+        throw AutomateException("L'automate n'existe pas");
+    return *automates2D[n];
+}
+
+const AutomateEpidemie& AutomateManager::getElemEp(unsigned int n) const {
+
+    if(n>nbEpStockes)
+        throw AutomateException("L'automate n'existe pas");
+    return *automatesEp[n];
+}
+
+

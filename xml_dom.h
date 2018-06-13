@@ -23,10 +23,14 @@ class Xml_Dom : public QWidget
     unsigned int c2;
 public:
     Xml_Dom();
-	~Xml_Dom();
+	~Xml_Dom(){}
+    ajouter_Automate();
 	ajouter_Automate1D(unsigned int n);
     ajouter_Automate2D(unsigned int mnV, unsigned int mxV, unsigned int mnM, unsigned int mxM);
     ajouter_AutomateEp(unsigned int c1, unsigned int c2);
+    unsigned int affiche1D();
+    unsigned int affiche2D();
+    unsigned int afficheEp();
 
 };
 

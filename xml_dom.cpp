@@ -105,9 +105,9 @@ Xml_Dom::Xml_Dom() : QWidget()
 }
 }
 
-Xml_Dom::ajouter_Automate1D(unsigned int n){ //ajouter avec le numero de règle
+Xml_Dom::ajouter_Automate(){
 
-    QDomDocument dom("list_Automate");
+	QDomDocument dom("list_Automate");
     QFile doc_xml("save_autocell.xml"); //on charge le document existant
 
     if(!doc_xml.open(QIODevice::ReadOnly)){
@@ -118,11 +118,20 @@ Xml_Dom::ajouter_Automate1D(unsigned int n){ //ajouter avec le numero de règle
     if(!dom.setContent(&doc_xml)){
         QMessageBox::critical(this,"Erreur","Impossible d'ouvrir le ficher XML");
         doc_xml.close();
-        return;}
+        return;
+	}
 
     doc_xml.close();
 
     QDomElement docElem = dom.documentElement(); //permet d'explorer le nouveau document DOM
+
+	/* afficher : "quel type d'automate voulez-vous ajouter ?"*/
+	for(std::vector<string>::iterator it = AutomateManager::getInstance().TypesAutomates.begin(); it != AutomateManager::getInstance().TypesAutomates.end(); ++it)
+		/*afficher *it */
+	/*en fonction du choix de l'utiisateur, demander les paramètres et exécuter une des fonctions 1d, 2d ou ep avec ces paramètres*/
+}
+
+Xml_Dom::ajouter_Automate1D(unsigned int n){ //ajouter avec le numero de règle
 
     QDomElement aut_elem = dom.createElement("Automate 1D"); // On crée un QDomElement qui a comme nom de balise "Automate 1D".
 
@@ -151,23 +160,6 @@ Xml_Dom::ajouter_Automate1D(unsigned int n){ //ajouter avec le numero de règle
 }
 
 Xml_Dom::ajouter_Automate2D(unsigned int mnV, unsigned int mxV, unsigned int mnM, unsigned int mxM){ //ajouter avec le numero de règle
-
-  QDomDocument dom("list_Automate");
-    QFile doc_xml("save_autocell.xml"); //on charge le document existant
-
-    if(!doc_xml.open(QIODevice::ReadOnly)){
-        QMessageBox::critical(this,"Erreur","Impossible d'ouvrir le ficher XML");
-        doc_xml.close();
-    return;}
-
-    if(!dom.setContent(&doc_xml)){
-        QMessageBox::critical(this,"Erreur","Impossible d'ouvrir le ficher XML");
-        doc_xml.close();
-        return;}
-
-    doc_xml.close();
-
-    QDomElement docElem = dom.documentElement();
 
     QDomElement aut_elem = dom.createElement("Automate 2D");
 
@@ -206,23 +198,6 @@ Xml_Dom::ajouter_Automate2D(unsigned int mnV, unsigned int mxV, unsigned int mnM
 
 Xml_Dom::ajouter_AutomateEp(unsigned int c1, unsigned int c2){ //ajouter avec le numero de règle
 
-    QDomDocument dom("list_Automate");
-    QFile doc_xml("save_autocell.xml"); //on charge le document existant
-
-    if(!doc_xml.open(QIODevice::ReadOnly)){
-        QMessageBox::critical(this,"Erreur","Impossible d'ouvrir le ficher XML");
-        doc_xml.close();
-    return;}
-
-    if(!dom.setContent(&doc_xml)){
-        QMessageBox::critical(this,"Erreur","Impossible d'ouvrir le ficher XML");
-        doc_xml.close();
-        return;}
-
-    doc_xml.close();
-
-    QDomElement docElem = dom.documentElement();
-
     QDomElement aut_elem = dom.createElement("Automate Epidemie");
 
     QDomElement c1_elem = aut_elem.createElement("Chance 1");
@@ -250,9 +225,47 @@ Xml_Dom::ajouter_AutomateEp(unsigned int c1, unsigned int c2){ //ajouter avec le
 
 }
 
+unsigned int Xml_Dom::affiche1D(){
 
+    aff=new QLabel("Automate 1D deja utilisés");
 
-Xml_Dom::~Xml_Dom()
-{
+    for(unsigned int i=0; i<255; i++){ //on inspecte l'ensemble du tableau pour voir si un automate existe déjà
 
+        if(AutomateManager::getInstance().getAutomate1D(i)){ //si la règle existe
+
+            //écrire la règle (avec sa conversion si on veut) et mettre un bouton radiobox
+
+        }
+
+        //récupere l'automate choisi
+    }
+}
+
+Xml_Dom::affiche2D(){
+
+    aff=new QLabel("Automate 2D deja utilisés");
+    nb=AutomateManager::getInstance().getNb2DStockes();
+
+    for(unsigned int i=0;i<nb;i++){
+
+        //afficher les quatres paramètres
+        AutomateManager::getInstance().getElem2D(i).getMinV();
+        AutomateManager::getInstance().getElem2D(i).getMaxV();
+        AutomateManager::getInstance().getElem2D(i).getMinM();
+        AutomateManager::getInstance().getElem2D(i).getMaxM();
+    }
+
+    //récupérer le i
+}
+
+Xml_Dom::afficheEp(){
+
+    aff=new QLabel("Automate 2D deja utilisés");
+    nb=AutomateManager::getInstance().getNbEpStockes();
+
+    for(unsigned int i=0;i<nb;i++){
+
+        AutomateManager::getInstance().getElemEp(i).getChance1();
+        AutomateManager::getInstance().getElemEp(i).getChance2();
+    }
 }

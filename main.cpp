@@ -7,7 +7,7 @@ using namespace std;
 
 int main()
 {
-	const AutomateEpidemie a3 = AutomateManager::getInstance().getAutomateEp(7, 5);
+	const Automate1D a3 = AutomateManager::getInstance().getAutomate1D(7);
     const AutomateEpidemie a2 = AutomateManager::getInstance().getAutomateEp(6, 2);
 	const AutomateEpidemie a1 = AutomateManager::getInstance().getAutomateEp(1, 3);
 	const AutomateEpidemie a6 = AutomateManager::getInstance().getAutomateEp(5, 5);

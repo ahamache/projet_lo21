@@ -1,30 +1,30 @@
 #include "etat.h"
-#include "automate.h"
+//#include "automate.h"
 
 Etat::Etat(unsigned int l, unsigned int c): nbColonne(c), nbLigne(l){
 
     if (c==0 || l==0)
-        throw AutomateException("Mauvaise dimension de la matrice");
+        throw EtatException("Mauvaise dimension de la matrice");
 
     else{
         valeurs = new int*[nbLigne];
         for (unsigned int i=0; i<nbLigne; i++){
             valeurs[i] = new int[nbColonne];
-			for (unsigned int j = 0; j < nbColonne; ++j)
-				valeurs[i][j] = 0;
+            for (unsigned int j = 0; j < nbColonne; ++j)
+                valeurs[i][j] = 0;
                 }
     }
 }
 
 void Etat::setCellule(unsigned int i, unsigned int j, int val) {
-	if (i >= nbLigne || j>=nbColonne)
-        throw AutomateException("Cellule inexistante dimension trop élevée");
-	valeurs[i][j] = val;
+    if (i >= nbLigne || j>=nbColonne)
+        throw EtatException("Cellule inexistante dimension trop Ã©levÃ©e");
+    valeurs[i][j] = val;
 }
 
 int Etat::getCellule(unsigned int i, unsigned int j) const{
     if (i>=nbLigne|| j>=nbColonne)
-        throw AutomateException("Cellule inexistante");
+        throw EtatException("Cellule inexistante");
     return valeurs[i][j];
 }
 
@@ -38,7 +38,7 @@ for(unsigned int i=0; i<nbLigne;++i)
 Etat::Etat(const Etat& e): nbColonne(e.nbColonne), nbLigne(e.nbLigne), valeurs(nullptr){
 
     if(nbLigne<=0 || nbColonne<=0)
-        throw AutomateException("Mauvaise dimension");
+        throw EtatException("Mauvaise dimension");
 
     else {
         valeurs = new int*[nbLigne];
@@ -55,7 +55,7 @@ Etat::Etat(const Etat& e): nbColonne(e.nbColonne), nbLigne(e.nbLigne), valeurs(n
 
 Etat& Etat::operator=(const Etat& e){
     if(this != &e){ // si auto-affectation alors inutile de tout recopier
-        if(nbLigne!=e.nbLigne){ //on refait tout le tableau car pas bon nombre de ligne dès le début
+        if(nbLigne!=e.nbLigne){ //on refait tout le tableau car pas bon nombre de ligne dÃ¨s le dÃ©but
 
             for(unsigned int i=0;i<nbLigne;++i)
                 delete valeurs[i]; //on supprime chaque ligne

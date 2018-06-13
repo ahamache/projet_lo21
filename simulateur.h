@@ -1,7 +1,7 @@
 #ifndef SIMULATEUR_H_INCLUDED
 #define SIMULATEUR_H_INCLUDED
 
-#include "etat.h"
+//#include "etat.h"
 #include "automate.h"
 
 using namespace std;
@@ -11,11 +11,11 @@ class Simulateur{
     const Automate& automate;
     const Etat* depart;
     Etat** etats;
-    unsigned int nbMaxEtats=0; //nb max qu'on sauvegarde dans le tableau etats
-    unsigned int rang=0;
+    unsigned int nbMaxEtats; //nb max qu'on sauvegarde dans le tableau etats
+    unsigned int rang;
     void build(unsigned int c);
-    Simulateur(const Simulateur& s)=delete;
-    Simulateur& operator=(const Simulateur& s)=delete;
+    Simulateur(const Simulateur& s);//=delete;
+    Simulateur& operator=(const Simulateur& s);//=delete;
 public :
     Simulateur(const Automate& a, unsigned int buf=2);
     Simulateur(const Automate& a, const Etat& dep, unsigned int buffer=2);
@@ -28,36 +28,36 @@ public :
     ~Simulateur();
 
     class Iterator {
-		friend class Simulateur;
+        friend class Simulateur;
         Simulateur* sim;
         const unsigned int i;
-		int j;
-		Iterator(Simulateur* s);
-	public:
-		Iterator();
-		bool isDone() const;
-		Iterator& operator++();
-		Etat& operator* () const;
-	};
-	Iterator getIterator() {
-		return Iterator(this);
-	}
+        int j;
+        Iterator(Simulateur* s);
+    public:
+        Iterator();
+        bool isDone() const;
+        Iterator& operator++();
+        Etat& operator* () const;
+    };
+    Iterator getIterator() {
+        return Iterator(this);
+    }
 
-	class ConstIterator {
-		friend class Simulateur;
+    class ConstIterator {
+        friend class Simulateur;
         const Simulateur* sim;
         const unsigned int i;
-		int j;
-		ConstIterator(Simulateur* s);
-	public:
-		ConstIterator();
-		bool isDone() const;
-		ConstIterator& operator++();
-		Etat& operator* () const;
-	};
-	ConstIterator getConstIterator() {
-		return ConstIterator(this);
-	}
+        int j;
+        ConstIterator(Simulateur* s);
+    public:
+        ConstIterator();
+        bool isDone() const;
+        ConstIterator& operator++();
+        Etat& operator* () const;
+    };
+    ConstIterator getConstIterator() {
+        return ConstIterator(this);
+    }
 };
 
 

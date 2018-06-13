@@ -5,6 +5,14 @@
 #include <iostream>
 using namespace std;
 
+class EtatException {
+public:
+    EtatException(const std::string& message):info(message) {}
+    std::string getInfo() const { return info; }
+private:
+    std::string info;
+};
+
 class Etat{
 
     unsigned int nbColonne;
@@ -18,9 +26,9 @@ public:
     unsigned int getLongueur()const {return nbLigne;}
     ~Etat();
     int getCellule(unsigned int i, unsigned int j) const;
-    void setCellule(unsigned int i, unsigned int j, int val); //on passe de bool à int pour pouvoir mieux s'adapter à d'autres automates
-	Etat(const Etat& e);
-	Etat& operator=(const Etat& e);
+    void setCellule(unsigned int i, unsigned int j, int val); //on passe de bool Ã  int pour pouvoir mieux s'adapter Ã  d'autres automates
+    Etat(const Etat& e);
+    Etat& operator=(const Etat& e);
 
 };
 

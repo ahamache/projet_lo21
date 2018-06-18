@@ -1,113 +1,130 @@
-#include "Xml_Dom.h"
+#include "xml_dom.h"
 #include <iostream>
 using namespace std;
 
-Xml_Dom::Xml_Dom() : QWidget()
-{
+Xml_Dom::Xml_Dom(const QString& param) : QWidget(){
 
-    QDomDocument *dom = new QDomDocument("list_Automate"); // CrÈation de l'objet DOM
-    QFile xml_doc("save_autocell.xml");// On ouvre le fichier XML qui contient les automates
+    QDomDocument *dom = new QDomDocument("list_Automate"); /*! On cr√©√© un objet dom de type QDomDocument*/
+    QFile xml_doc("save_autocell.xml"); /*! On ouvre le fichier XML qui contient les automates avec QFile*/
 
-    if(!xml_doc.open(QIODevice::ReadOnly))// Si l'on n'arrive pas ‡ ouvrir le fichier XML.
+    if(!xml_doc.open(QIODevice::ReadWrite)) /*! On teste si on arrive √† ouvrir le fichier XML */
     {
-        QMessageBox::warning(this,"Erreur ‡ l'ouverture du document XML","Le document XML n'a pas pu Ítre ouvert. VÈrifiez que le nom est le bon et que le document est bien placÈ");
+        QMessageBox::warning(this,"Erreur √† l'ouverture du document XML","Le document XML n'a pas pu √™tre ouvert. V√©rifiez que le nom est le bon et que le document est bien plac√©");
         return;
     }
 
-    if (!dom->setContent(&xml_doc)) // On associe le fichier XML ‡ l'objet DOM, si Áa ne fonctionne pas alors fermeture du document XML avec message d'erreur
+    if(xml_doc.size()==0){ /*! Si le fichier XML est vide, on insert l'en-t√™te du fichier XML et une balise racine Document puis on ferme le document*/
+            xml_doc.write("<?xml version='1.0' encoding='UTF-8'?>\n<Document>\n</Document>");
+            xml_doc.close();
+            xml_doc.open(QIODevice::ReadOnly);
+        }
+
+    if (!dom->setContent(&xml_doc)) /*! On associe le fichier XML √† l'objet DOM, si √ßa ne fonctionne pas alors fermeture du document XML avec message d'erreur*/
     {
         xml_doc.close();
-        QMessageBox::warning(this,"Erreur ‡ l'ouverture du document XML","Le document XML n'a pas pu Ítre attribuÈ ‡ l'objet QDomDocument.");
+        QMessageBox::warning(this,"Erreur √† l'ouverture du document XML","Le document XML n'a pas pu √™tre attribu√© √† l'objet QDomDocument.");
         return;
     }
-    xml_doc.close(); //on ferme le fichier xml
+    xml_doc.close(); /*! On ferme le fichier xml apr√®s sa lecture */
 
-    QDomElement dom_element=dom.documentElement(); //dom_element a pour valeur tout le document XML
-    QDomNode noeud = dom_element.firstChildElement(); //noeud a pour valeur le premier noeud du fichier -->nous va Ítre <automate1D>
+    QDomElement dom_element=dom->documentElement(); /*! On affecte √† dom_element la valeur du document XML entier*/
+    QDomNode noeud = dom_element.firstChildElement(); /*! On affecte √† noeud la valeur du premier noeud du fichier, <Automate1D> par exemple */
 
 
-    ////////// dans le fichier il y a les trois types d'automates stockÈs
+    /*! Dans le fichier on stocke les trois types d'automates */
 
-    while(!noeud.isNull()){ //parcours de tous les automates
+    while(!noeud.isNull()){ /*! on rentre dans une boucle while pour parcourir tous les automates */
 
-        if(noeud.tagName() == "Automate1D"){
+        QDomElement element = noeud.toElement(); /*! On transforme le noeud en √©l√©ment */
 
-            QDomNode n2 = noeud.firstChildElement(); //on regarde ‡ l'intÈrieur de Automate1D
+        if(element.tagName()== param){
 
-            if(n2.tagName() == "Numero"){ //on vÈrifie que les balises sont correctes
-                num=n2.text(); //on rÈcupËre le numÈro de la rËgle Ècrite ‡ l'intÈrieur
-                AutomateManager::getInstance().getAutomate1D(num); //besoin que d'un des deux paramËtres
-                }
+            if(element.tagName() == "Automate1D"){
 
-            else if(n2.tagName() == "NumeroBit"){
-                numBit=n2.text;
-                AutomateManager::getInstance().getAutomate1D(numBit); //besoin que d'un des deux paramËtres
-                }
+                QDomNode n2 = noeud.firstChildElement(); /*! On regarde √† l'int√©rieur de Automate1D */
+                QDomElement elem2 = n2.toElement();
 
-            //inutile de chercher la deuxiËme balise car on a besoin que d'un des deux attributs pour le constructeur
+                if(elem2.tagName() == "Numero"){ /*! On v√©rifie que les balises sont correctes */
 
-            else QMessageBox::warning(this,"Erreur de lecture du document XML","Le document XML prÈsente une balise incorrecte.");
+                    num=elem2.text().toInt(); /*! On r√©cup√®re le num√©ro de la r√®gle √©crite √† l'int√©rieur avec .toInt()*/
+                    AutomateManager::getInstance().getAutomate1D(num); //besoin que d'un des deux param√®tres
+                    }
 
-            noeud=noeud.nextSibling(); //on passe au noeud automate suivant
-        }
+                else if(elem2.tagName() == "NumeroBit"){
+                    numBit=elem2.text().toStdString();
+                    AutomateManager::getInstance().getAutomate1D(numBit); //besoin que d'un des deux param√®tres
+                    }
 
-        else if(noeud.tagName() == "Automate2D"){
+                /*! Inutile de chercher la deuxi√®me balise NumeroBit car on a besoin que d'un des deux attributs pour le constructeur*/
 
-            QDomNode n2 = noeud.firstChildElement();
-            int t=1;
-
-            while(!n2.isNull() && t==1){
-
-                if(n2.tagName() == "Minimum vivant")
-                    miniV=n2.text();
-
-                else if(n2.tagName() == "Maximum vivant")
-                    maxiV=n2.text();
-
-                else if(n2.tagName() == "Minimum mort")
-                    miniM=n2.text();
-
-                else if(n2.tagName() == "Maximum mort")
-                    maxiM=n2.text();
-
-                else t=0; //vÈrification de la validitÈ des balises
-
-                n2=n2.nextSibling();
+                else QMessageBox::warning(this,"Erreur de lecture du document XML","Le document XML pr√©sente une balise incorrecte.");
             }
 
-            if(t==1)
-                AutomateManager::getInstance().getAutomate2D(miniV, maxiV, miniM, maxiM);
-            noeud=noeud.nextSibling();
+            else if(element.tagName() == "Automate2D"){ /*! On effectue des op√©rations similaires pour Automate2D et AutomateEpidemie*/
+
+                QDomNode n2 = noeud.firstChildElement();
+                QDomElement elem2 = n2.toElement();
+
+                int t=1;
+
+                while(!n2.isNull() && t==1){
+
+                    if(elem2.tagName() == "Minimumvivant")
+                        miniV=elem2.text().toInt();
+
+                    else if(elem2.tagName() == "Maximumvivant")
+                        maxiV=elem2.text().toInt();
+
+                    else if(elem2.tagName() == "Minimummort")
+                        miniM=elem2.text().toInt();
+
+                    else if(elem2.tagName() == "Maximummort")
+                        maxiM=elem2.text().toInt();
+
+                    else t=0; //v√©rification de la validit√© des balises
+
+                    n2=n2.nextSibling();
+                    elem2 = n2.toElement();
+                }
+
+                if(t==1)
+                    AutomateManager::getInstance().getAutomate2D(miniV, maxiV, miniM, maxiM);
+            }
+
+            else if(element.tagName() == "AutomateEpidemie"){
+
+                QDomNode n2 = noeud.firstChildElement();
+                QDomElement elem2 = n2.toElement();
+
+                int t=1;
+
+                while(!n2.isNull() && t==1){
+                    if(elem2.tagName() == "Chance1")
+                        c1=elem2.text().toInt();
+
+                    else if(elem2.tagName() == "Chance2")
+                        c2=elem2.text().toInt();
+
+                    else t=0;
+
+                    n2=n2.nextSibling();
+                    elem2 = n2.toElement();
+                }
+                if (t==1)
+                    AutomateManager::getInstance().getAutomateEp(c1, c2);
         }
 
-        else if(noeud.tagName() == "Automate Epidemie"){
-
-            QDomNode n2 = noeud.firstChildElement();
-            int t=1;
-
-            while(!n2.isNull() && t==1){
-
-                if(n2.tagName() == "Chance 1")
-                    c1=n2.text();
-
-                else if(n2.tagName() == "Chance 2")
-                    c2=n2.text();
-
-                else t=0;
-
-                n2=n2.nextSibling();
-            }
-            if (t==1)
-                AutomateManager::getInstance().getAutomateEp(c1, c2);
-            noeud=noeud.nextSibling();
-        } //vÈrifier que les deux attributs sont bien remplsi !!!
+}
+        noeud=noeud.nextSibling(); /*! On passe au noeud automate suivant avec nextSibling()*/
 
 }
+
 }
 
-Xml_Dom::ajouter_Automate(){
 
-	QDomDocument dom("list_Automate");
+/*void Xml_Dom::ajouter_Automate(){
+
+    QDomDocument dom("list_Automate");
     QFile doc_xml("save_autocell.xml"); //on charge le document existant
 
     if(!doc_xml.open(QIODevice::ReadOnly)){
@@ -119,153 +136,170 @@ Xml_Dom::ajouter_Automate(){
         QMessageBox::critical(this,"Erreur","Impossible d'ouvrir le ficher XML");
         doc_xml.close();
         return;
-	}
+    }
 
     doc_xml.close();
 
     QDomElement docElem = dom.documentElement(); //permet d'explorer le nouveau document DOM
 
-	/* afficher : "quel type d'automate voulez-vous ajouter ?"*/
-	for(std::vector<string>::iterator it = AutomateManager::getInstance().TypesAutomates.begin(); it != AutomateManager::getInstance().TypesAutomates.end(); ++it)
-		/*afficher *it */
-	/*en fonction du choix de l'utiisateur, demander les paramËtres et exÈcuter une des fonctions 1d, 2d ou ep avec ces paramËtres*/
-}
+     afficher : "quel type d'automate voulez-vous ajouter ?"
+    for(std::vector<string>::iterator it = AutomateManager::getInstance().TypesAutomates.begin(); it != AutomateManager::getInstance().TypesAutomates.end(); ++it)
+        afficher *it
+    en fonction du choix de l'utiisateur, demander les param√®tres et ex√©cuter une des fonctions 1d, 2d ou ep avec ces param√®tres
+}*/
 
-Xml_Dom::ajouter_Automate1D(unsigned int n){ //ajouter avec le numero de rËgle
+void Xml_Dom::ajouter_Automate1D(unsigned int n){ /*! On ajoute un nouvel automate dans le fichier XML en ajoutant son num√©ro de r√®gle*/
 
-    QDomElement aut_elem = dom.createElement("Automate 1D"); // On crÈe un QDomElement qui a comme nom de balise "Automate 1D".
+    QDomDocument dom("list_Automate");
+    QFile doc_xml("save_autocell.xml"); /*! On charge le document existant */
 
-    QDomElement num_elem = aut_elem.createElement("Numero"); //on crÈÈ un nouvel ÈlÈment dont le nom de balise est Numero
-    QDomText num_text = num_elem.createTexteNode(n); //‡ l'intÈrieur de la balise on ajoute le texte n
+    if(!doc_xml.open(QIODevice::ReadWrite)){ /*! On teste l'ouverture du fichier */
+        QMessageBox::critical(this,"Erreur","Impossible d'ouvrir le ficher XML");
+        doc_xml.close();
+    return;}
 
-    QDomElement numB_elem = aut_elem.createElement("Numero Bit");
-    QDomText numB_text = numB_elem.createTexteNode(NumToNumBit(n));
+    if(!dom.setContent(&doc_xml)){
+        QMessageBox::critical(this,"Erreur","Impossible d'ouvrir le ficher XML 22222");
+        doc_xml.close();
+        return;
+    }
 
-    docElem.appendChild(aut_elem); //on ajoute le noeud racine au DOM
-    aut_elem.appendChild(num_elem); //on rajoute ses deux noeuds fils
+    doc_xml.close();
+
+    QDomElement docElem = dom.documentElement(); /*! On cr√©√© un objet QDomElement qui contiendra l'ensemble des balises*/
+
+    QDomElement aut_elem = dom.createElement("Automate1D"); /*! On cr√©e un QDomElement qui a comme nom de balise "Automate 1D"*/
+
+    QDomElement num_elem = dom.createElement("Numero"); /*! On cr√©√© un nouvel √©l√©ment dont le nom de balise est Numero*/
+
+    QString nb = QString::number(n); /*! On utilise un objet de type QString auquel on affecte le num√©ro de r√®gle rentr√© en param√®tre*/
+    num_elem.appendChild(dom.createTextNode(nb)); /*! A l'int√©rieur de la balise on ajoute le texte n*/
+
+    QDomElement numB_elem = dom.createElement("NumeroBit"); /*! On cr√©√© aussi une balise NumeroBit*/
+    numB_elem.appendChild(dom.createTextNode(QString::fromStdString(NumToNumBit(n)))); /*! On rentre dans la balise NumeroBit la conversion en binaire du num√©ro de la r√®gle*/
+
+    docElem.appendChild(aut_elem); /*! On ajoute le noeud racine du nouvel automate √† l'objet global DOM */
+    aut_elem.appendChild(num_elem); /*! On attache au noeud racine ses deux noeuds fils */
     aut_elem.appendChild(numB_elem);
 
-    QString write_doc = dom.toString(); //on transforme DOM en string
+    QString write_doc = dom.toString(); /*! On transforme DOM en string */
 
-    QFile fichier("save_autocell.xml"); //on crÈer un QFile pour pouvoir Ècrire dedans
-    if(!fichier.open(QIODevice::WriteOnly)){ //on ouvre le fichier
+    QFile fichier("save_autocell.xml"); /*! On cr√©er un QFile pour pouvoir √©crire dedans */
+    if(!fichier.open(QIODevice::WriteOnly)){ /*! on ouvre le fichier*/
         fichier.close();
-        QMessageBox::critical(this,"Erreur","Impossible d'Ècrire dans le document XML");
+        QMessageBox::critical(this,"Erreur","Impossible d'√©crire dans le document XML");
         return;
     }
 
     QTextStream stream(&fichier);
-    stream << "<?xml version='1.0' encoding='UTF-8'?>"<<write_doc; // l'opÈrateur << permet d'Ècrire dans write_doc
+    stream << write_doc; /*! L'op√©rateur << permet d'√©crire dans write_doc */
     fichier.close();
 }
 
-Xml_Dom::ajouter_Automate2D(unsigned int mnV, unsigned int mxV, unsigned int mnM, unsigned int mxM){ //ajouter avec le numero de rËgle
+void Xml_Dom::ajouter_Automate2D(unsigned int mnV, unsigned int mxV, unsigned int mnM, unsigned int mxM){ /*! On veut ajouter un nouvel automate dans le fichier √† partir des r√®gles rentr√©es en argument*/
 
-    QDomElement aut_elem = dom.createElement("Automate 2D");
+    if(mnV>mxV || mnM>mxM){
+        QMessageBox::critical(this,"Erreur","Nombre de voisinnage invalide");
+        return;
+    }
 
-    QDomElement mnV_elem = aut_elem.createElement("Minimum vivant");
-    QDomText mnV_text = mnV_elem.createTextNode(mnV);
+    QDomDocument dom("list_Automate");
+    QFile doc_xml("save_autocell.xml"); /*! On charge le document existant*/
 
-    QDomElement mxV_elem = aut_elem.createElement("Maximum vivant");
-    QDomText mxV_text = mxV_elem.createTextNode(mxV);
+    if(!doc_xml.open(QIODevice::ReadOnly)){
+        QMessageBox::critical(this,"Erreur","Impossible d'ouvrir le ficher XML");
+        doc_xml.close();
+    return;}
 
-    QDomElement mnM_elem = aut_elem.createElement("Minimum mort");
-    QDomText mnM_text = mnM_elem.createTextNode(mnM);
+    if(!dom.setContent(&doc_xml)){
+        QMessageBox::critical(this,"Erreur","Impossible d'ouvrir le ficher XML");
+        doc_xml.close();
+        return;
+    }
 
-    QDomElement mxM_elem = aut_elem.createElement("Maximum mort");
-    QDomText mxM_text = mxM_elem.createTextNode(mxM);
+    doc_xml.close();
+
+    QDomElement docElem = dom.documentElement(); /*! Comme pour la fonction Ajouter_1D, on cr√©√© un noeud global dans lequel on cr√©√© de nouveaux noeuds afin de construire l'arborescence du XML*/
+
+    QDomElement aut_elem = dom.createElement("Automate2D");
+
+    QDomElement mnV_elem = dom.createElement("Minimumvivant"); /*! On rentre dans chaque balise les donn√©es qui leur correspondent rentr√©es en argument*/
+    mnV_elem.appendChild(dom.createTextNode(QString::number(mnV)));
+
+    QDomElement mxV_elem = dom.createElement("Maximumvivant");
+    mxV_elem.appendChild(dom.createTextNode(QString::number(mxV)));
+
+    QDomElement mnM_elem = dom.createElement("Minimummort");
+    mnM_elem.appendChild(dom.createTextNode(QString::number(mnM)));
+
+    QDomElement mxM_elem = dom.createElement("Maximummort");
+    mxM_elem.appendChild(dom.createTextNode(QString::number(mxM)));
 
     docElem.appendChild(aut_elem);
-    aut_elem.appendChild(mnV_elem); //on rajoute les quatre noeuds fils
+    aut_elem.appendChild(mnV_elem); /*! On rattache les quatre noeuds fils au noeud racine*/
     aut_elem.appendChild(mxV_elem);
     aut_elem.appendChild(mnM_elem);
     aut_elem.appendChild(mxM_elem);
 
-    QString write_doc = dom.toString(); //on transforme DOM en string
+    QString write_doc = dom.toString(); /*! On transforme DOM en string */
 
-    QFile fichier("save_autocell.xml"); //on crÈer un QFile pour pouvoir Ècrire dedans
-    if(!fichier.open(QIODevice::WriteOnly)){ //on ouvre le fichier
+    QFile fichier("save_autocell.xml"); /*! On cr√©er un QFile pour pouvoir √©crire dedans*/
+    if(!fichier.open(QIODevice::WriteOnly)){ /*! On ouvre le fichier*/
         fichier.close();
-        QMessageBox::critical(this,"Erreur","Impossible d'Ècrire dans le document XML");
+        QMessageBox::critical(this,"Erreur","Impossible d'√©crire dans le document XML");
         return;
     }
 
     QTextStream stream(&fichier);
-    stream << "<?xml version='1.0' encoding='UTF-8'?>"<< write_doc; // l'opÈrateur << permet d'Ècrire dans write_doc
+    stream << write_doc; /*! L'op√©rateur << permet d'√©crire dans write_doc */
     fichier.close();
 
 }
 
-Xml_Dom::ajouter_AutomateEp(unsigned int c1, unsigned int c2){ //ajouter avec le numero de rËgle
+void Xml_Dom::ajouter_AutomateEp(unsigned int c1, unsigned int c2){ /*! On ajoute un nouvel automate en le construisant √† partir des param√®tres avec lesquels la fonction est appel√©e*/
 
-    QDomElement aut_elem = dom.createElement("Automate Epidemie");
+    QDomDocument dom("list_Automate");
+    QFile doc_xml("save_autocell.xml"); /*! On charge le document existant */
 
-    QDomElement c1_elem = aut_elem.createElement("Chance 1");
-    QDomText c1_text = c1_elem.createTextNode(mnV);
+    if(!doc_xml.open(QIODevice::ReadOnly)){
+        QMessageBox::critical(this,"Erreur","Impossible d'ouvrir le ficher XML");
+        doc_xml.close();
+    return;}
 
-    QDomElement c2_elem = aut_elem.createElement("Chance 2");
-    QDomText c2_text = c2_elem.createTextNode(mxV);
+    if(!dom.setContent(&doc_xml)){
+        QMessageBox::critical(this,"Erreur","Impossible d'ouvrir le ficher XML");
+        doc_xml.close();
+        return;
+    }
+
+    doc_xml.close();
+
+    QDomElement docElem = dom.documentElement();
+
+    QDomElement aut_elem = dom.createElement("AutomateEpidemie");
+
+    QDomElement c1_elem = dom.createElement("Chance1");
+    c1_elem.appendChild(dom.createTextNode(QString::number(c1)));
+
+    QDomElement c2_elem = dom.createElement("Chance2");
+    c2_elem.appendChild(dom.createTextNode(QString::number(c2)));
 
     docElem.appendChild(aut_elem);
-    aut_elem.appendChild(c1_elem); //on rajoute les quatre noeuds fils
+    aut_elem.appendChild(c1_elem);
     aut_elem.appendChild(c2_elem);
 
-    QString write_doc = dom.toString(); //on transforme DOM en string
 
-    QFile fichier("save_autocell.xml"); //on crÈer un QFile pour pouvoir Ècrire dedans
-    if(!fichier.open(QIODevice::WriteOnly)){ //on ouvre le fichier
+    QString write_doc = dom.toString(); /*! on transforme DOM en string*/
+
+    QFile fichier("save_autocell.xml"); /*! on cr√©er un QFile pour pouvoir √©crire dedans*/
+    if(!fichier.open(QIODevice::WriteOnly)){ /*! on ouvre le fichier*/
         fichier.close();
-        QMessageBox::critical(this,"Erreur","Impossible d'Ècrire dans le document XML");
+        QMessageBox::critical(this,"Erreur","Impossible d'√©crire dans le document XML");
         return;
     }
 
     QTextStream stream(&fichier);
-    stream << "<?xml version='1.0' encoding='UTF-8'?>"<< write_doc; // l'opÈrateur << permet d'Ècrire dans write_doc
+    stream << write_doc; /*! L'op√©rateur << permet d'√©crire dans write_doc */
     fichier.close();
 
-}
-
-unsigned int Xml_Dom::affiche1D(){
-
-    aff=new QLabel("Automate 1D deja utilisÈs");
-
-    for(unsigned int i=0; i<255; i++){ //on inspecte l'ensemble du tableau pour voir si un automate existe dÈj‡
-
-        if(AutomateManager::getInstance().getAutomate1D(i)){ //si la rËgle existe
-
-            //Ècrire la rËgle (avec sa conversion si on veut) et mettre un bouton radiobox
-
-        }
-
-        //rÈcupere l'automate choisi
-    }
-}
-
-Xml_Dom::affiche2D(){
-
-    aff=new QLabel("Automate 2D deja utilisÈs");
-    nb=AutomateManager::getInstance().getNb2DStockes();
-
-    for(unsigned int i=0;i<nb;i++){
-
-        //afficher les quatres paramËtres
-        AutomateManager::getInstance().getElem2D(i).getMinV();
-        AutomateManager::getInstance().getElem2D(i).getMaxV();
-        AutomateManager::getInstance().getElem2D(i).getMinM();
-        AutomateManager::getInstance().getElem2D(i).getMaxM();
-    }
-
-    //rÈcupÈrer le i
-}
-
-Xml_Dom::afficheEp(){
-
-    aff=new QLabel("Automate 2D deja utilisÈs");
-    nb=AutomateManager::getInstance().getNbEpStockes();
-
-    for(unsigned int i=0;i<nb;i++){
-
-        AutomateManager::getInstance().getElemEp(i).getChance1();
-        AutomateManager::getInstance().getElemEp(i).getChance2();
-    }
 }
